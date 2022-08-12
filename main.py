@@ -31,7 +31,7 @@ def SetSstDACs():
                 dv = Conf.GetDac(ch, dc)
                 DacData[0] = (dv & 65280) >> 8
                 DacData[1] = (dv & 65280) >> 8
-                bus.write_i2c_block_data(format(dadr,'08b'), format(dn, '08b'), format(dv, '016b'))
+                bus.write_i2c_block_data(dadr, dn, dv)
                 print(format(dadr,'08b'), format(dn, '08b'), format(dv, '016b'))
 
                 dok = True
