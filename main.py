@@ -1,5 +1,5 @@
 import numpy as np
-#import smbus
+import smbus
 import SnConstants as C
 import SnConfigFrame as Conf
 
