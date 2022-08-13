@@ -1,3 +1,5 @@
+#python main.py
+
 import numpy as np
 import smbus
 import SnConstants as C
@@ -9,8 +11,7 @@ def SetSstDACs():
     """Sends the High and Low thresholds to the LTC2657 DAC Chip via I2C"""
 
     dadr, dv, dn = 0, 0, 0
-    #DacData = np.empty(2)
-    DacData = [0, 0]
+    LSB, MSB = 0, 0
 
     for ch in range(C.Nchans):
         dadr = C.LTC2657Addr[int(ch / C.ChansPerLTC2657)]
@@ -30,13 +31,9 @@ def SetSstDACs():
 
                 dn |= (C.UpdateDacCmd << 4)
                 dv = Conf.GetDac(ch, dc)
-                DacData[0] = (dv & 65280) >> 8
-                DacData[1] = (dv & 255)
-                #print(format(dv, '016b'))
-                #print(format(DacData[0],'08b'), format(DacData[1],'08b') )
-                bus.write_i2c_block_data(dadr, dn, DacData)
-                #print(format(dadr,'08b'), format(dn, '08b'), format(DacData[0], '016b'))
-                #print(bin(int(DacData[0])))
+                MSB = (dv & 65280) >> 8
+                LSB = (dv & 255)
+                bus.write_i2c_block_data(dadr, dn, int(MSB), int(LSB))
                 dok = True
 
 if __name__=="__main__":

@@ -62,22 +62,22 @@ if CHIPBOARD == SST4CH:
     Nsamps          = NsampsSst
     NchanDacs       = NchanDacsSst
     NstopBytes      = NstopBytesSst4ch
-    NumLTC2657s     = 1                 # Number of DAC Chips per Board
-    ChansPerLTC2657 = 4                 # Number of CHs Assigned per DAC
-    LTC2657Addr     = np.array([115 << 1])  # LTC2657 Slave Addr \\ BIT Form: [11100110]
-    UpdateDacCmd    = 3                 # LTC2657 Write Command \\ BIT Form: [0011]
-    MaxDacSetTries  = 3                 # Try to Set DACs N Times
+    NumLTC2657s     = 1             # Number of DAC Chips per Board
+    ChansPerLTC2657 = 4             # Number of CHs Assigned per DAC
+    LTC2657Addr     = [0x73]        # LTC2657 Slave Addr \\ BIT Form: [11100110]
+    UpdateDacCmd    = 3             # LTC2657 Write Command \\ BIT Form: [0011]
+    MaxDacSetTries  = 3             # Try to Set DACs N Times
 
 elif CHIPBOARD == SST8CH:
     Nchans          = NchansEightAnt
     Nsamps          = NsampsSst
     NchanDacs       = NchanDacsSst
     NstopBytes      = NstopBytesSst8ch
-    NumLTC2657s     = 2                 # Number of DAC Chips per Board
-    ChansPerLTC2657 = 4                 # Number of CHs Assigned per DAC
-    LTC2657Addr     = np.array([65 << 1, 50 << 1])  # LTC2657 Slave Addr \\ BIT Form: [10000010, 01100100]
-    UpdateDacCmd    = 3                 # LTC2657 Write Command \\ BIT Form: [0011]
-    MaxDacSetTries  = 3                 # Try to Set DACs N Times
+    NumLTC2657s     = 2             # Number of DAC Chips per Board
+    ChansPerLTC2657 = 4             # Number of CHs Assigned per DAC
+    LTC2657Addr     = [0x41, 0x32]  # LTC2657 Slave Addr \\ BIT Form: [10000010, 01100100]
+    UpdateDacCmd    = 3             # LTC2657 Write Command \\ BIT Form: [0011]
+    MaxDacSetTries  = 3             # Try to Set DACs N Times
 
 else:
     raise ("CHIPBOARD Not Defined in SnPreCompOptions.py")
