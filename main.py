@@ -33,7 +33,7 @@ def SetSstDACs():
                 dv = Conf.GetDac(ch, dc)
                 MSB = (dv & 65280) >> 8
                 LSB = (dv & 255)
-                bus.write_i2c_block_data(dadr, dn, int(MSB), int(LSB))
+                bus.write_i2c_block_data(dadr, dn, [int(MSB), int(LSB)])
                 dok = True
 
 if __name__=="__main__":
