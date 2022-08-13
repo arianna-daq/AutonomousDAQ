@@ -1,9 +1,10 @@
-#python main.py
+# python main.py
 
 import numpy as np
 import smbus
 import SnConstants as C
-import SnConfigFrame as Conf
+from SnConfigFrame import GetDac
+from SnPreCompOptions import DEBUG
 
 bus = smbus.SMBus(1)
 
@@ -24,6 +25,8 @@ def SetSstDACs():
                 if dok == True:
                     break
 
+                if DEBUG == True:
+                    print("Start I2C for dc= %d" % (dc))
 
                 # Address for Each DAC Register
                 dn = (C.ChansPerLTC2657*C.NchanDacs) - (dc*C.ChansPerLTC2657) - C.ChansPerLTC2657 + (ch % C.ChansPerLTC2657)
@@ -35,18 +38,21 @@ def SetSstDACs():
 
                 # Build Data Bitstream to Send to LTC2657 DAC Chip
                 dn |= (C.UpdateDacCmd << 4)
-                dv = Conf.GetDac(ch, dc)
+                dv = GetDac(ch, dc)
                 MSB = (dv & 65280) >> 8
                 LSB = (dv & 255)
 
-                # Send Data Bitstream to DAC Chip via I2C
+                # Try Send Data Bitstream to DAC Chip via I2C
+                # If Error is Raised then Try Again
                 try:
                     bus.write_i2c_block_data(dadr, dn, [int(MSB), int(LSB)])
                     dok = True
                 except OSError:
                     dok = False
 
-                print(ch, dc, tries, dok)
+            if DEBUG == True:
+                print("Channel " + str(ch) + ": dok = " + str(dok) )
+
 
 if __name__=="__main__":
     SetSstDACs()
