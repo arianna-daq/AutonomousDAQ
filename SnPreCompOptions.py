@@ -36,21 +36,25 @@ DISABLE_CONFIG_SAFETYNETS = False
 # // "standard" serial (unbuffered) provided by mbed
 # #define USE_MODSERIAL
 
-# Available CHIPBOARDs.
-# Values should NEVER change! Variables must be set equal to a constant.
-
+'''
+Available CHIPBOARDs.
+Values should NEVER change! Variables must be set equal to a constant.
+'''
 SST4CH  =   0  # Set CHIPBOARD for 2022 RPi Firmware with a 1 SST chip running at 1GHz sampling
 SST8CH  =   1  # Set CHIPBOARD for 2022 RPi Firmware with a 2 SST chip running at 1GHz sampling
 
-# Select CHIPBOARD.
-
+'''
+Select CHIPBOARD.
+'''
 CHIPBOARD = SST4CH
 #CHIPBOARD = SST8CH
 
-# // how many bits the DACs use
-# //#define DAC_BITS 12   // use for 4ch atwd/sst boards
-# #define DAC_BITS 16   // use for 8ch sst boards (2017-18)
-#
+'''
+How many bits are there per DAC register
+'''
+DAC_BITS = 16
+
+
 # // whether or not to use the flash memory on the mbed board, to call
 # // the mbed provided function that gets the MAC address, etc.
 # // these functions all use the mbed interface chip. it has been found
