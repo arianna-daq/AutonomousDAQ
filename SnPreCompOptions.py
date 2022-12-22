@@ -14,8 +14,8 @@ Last Updated: 08-11-22
 # screen. Other files with DEBUG may need to be defined True to
 # receive output. Debug is primarily used.
 
-#DEBUG = True
-DEBUG = False
+DEBUG = True
+#DEBUG = False
 
 # Whether to Disable Configuration Safety Nets. In field, this is
 # not normally True. In lab settings, disabling safety nets can be
@@ -29,8 +29,7 @@ DISABLE_CONFIG_SAFETYNETS = False
 # // for now, twitter is completely not working.
 # // NOTE: remember to set kNcomms in SnConstants.h so it equals the number
 # // of comms enabled!!
-# #define ENABLE_AFAR_COMM
-# #define ENABLE_SBD_COMM
+ENABLE_SBD_COMM = True
 
 # // use MODSERIAL (a buffered serial interface) instead of the
 # // "standard" serial (unbuffered) provided by mbed
@@ -40,14 +39,12 @@ DISABLE_CONFIG_SAFETYNETS = False
 Available CHIPBOARDs.
 Values should NEVER change! Variables must be set equal to a constant.
 '''
-SST4CH  =   0  # Set CHIPBOARD for 2022 RPi Firmware with a 1 SST chip running at 1GHz sampling
-SST8CH  =   1  # Set CHIPBOARD for 2022 RPi Firmware with a 2 SST chip running at 1GHz sampling
+SST8CH  =   1  # Set CHIPBOARD for 2023 RPi Firmware with a 2 SST chip running at 1GHz sampling
 
 '''
 Select CHIPBOARD.
 '''
-CHIPBOARD = SST4CH
-#CHIPBOARD = SST8CH
+CHIPBOARD = SST8CH
 
 '''
 How many bits are there per DAC register
