@@ -81,4 +81,4 @@ if __name__=="__main__":
     if DEBUG == True:
         print("Configuration File Loaded.")
 
-    SetSstDACs(0)
+    #SetSstDACs(0)
