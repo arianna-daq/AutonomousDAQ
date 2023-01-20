@@ -1,7 +1,8 @@
 # python main.py
 
 import numpy as np
-#import smbus
+import smbus
+import RPi.GPIO as GPIO
 from SnConstants import *
 from SnPreCompOptions import *
 from SnConfigFrame import *
@@ -74,11 +75,19 @@ if __name__=="__main__":
     if DEBUG == True:
         print("System Starting...")
 
-    # Assigning IO pins
-    # bus = smbus.SMBus(1)
+    # Initialize and Assign IO pins
+    bus = smbus.SMBus(1)
+
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(33, GPIO.OUT, initial=1)     # Card/ Data Taking Power [False]
+    GPIO.setup(36, GPIO.OUT, initial=0)     # Amp Power [False]
+    GPIO.setup(40, GPIO.OUT, initial=0)     # Iridium Power [False]
+
+
 
     LoadDEFCONF()
     if DEBUG == True:
         print("Configuration File Loaded.")
 
     #SetSstDACs(0)
+
