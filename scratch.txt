@@ -1,0 +1,48 @@
+username    arianna
+password    iceBox11
+
+### RASPBERRY PI ZERO 2W POWER SPECS ###
+
+--- IDLE MODE ---
+Only RPi Zero On w/ screen and keyboard connected, Wifi on
+Input Voltage       [VIN]       12.0 V
+Current             [I]         0.21 A
+Voltage to RPi      [Vr]        5.0  V
+
+Only RPi Zero On w/ Wifi on
+Input Voltage       [VIN]       12.0 V
+Current             [I]         0.12 A
+Voltage to RPi      [Vr]        5.0  V
+
+Device          Current     Power
+RPi [Idle]      0.11 A      1.32 W
+Keyboard        0.07 A      0.84 W
+HDMI Screen     0.02 A      0.24 W
+Wifi            <0.3 A      3.6  W [Only when processing and in the form of spikes up to 0.3 A]
+Regulator       0.01 A      0.12 W
+
+Note: Keyboard pulls an additional 0.07 A and the HDMI screen pulls 0.02 A. Wifi seems to only
+pull current when actively connecting to something which can spike by 0.30 A more. When idling
+wifi does not contribute to the total current consumption. Astrid reports the RPi when idling
+pulls 0.11 A with nothing connected. We use an adjustable linear voltage regulator to convert
+VIN to Vr. This implies the Regulator current consumption is about 0.01 A. Wifi current
+consumption also includes any additional current pulled due to processing power for example
+running "sudo apt upgrade" can reach a total current of 0.47 A.
+
+Note: When HDMI and keyboard are connected during startup the current pulled can raise up to
+0.46 A for the whole board. It reduces to 0.21A when idle.
+
+### DATA TAKING ELECTRONICS POWER SPECS ###
+
+--- IDLE MODE ---
+Input Voltage       [VIN]       12.0 V
+Current             [I]         0.37 A [Irregular jumps to 0.4 A]
+
+
+
+
+Board Design Errors
+- Replace the 2.5V fixed Linear Regulator for Low Voltage Drop ones
+- Vias around amp voltage regulator are not copper exposed
+- RPi does not read analog signals it can only read digital signals
+
