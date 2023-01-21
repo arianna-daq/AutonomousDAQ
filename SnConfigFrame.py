@@ -162,8 +162,6 @@ class SnConfigFrame:
         'WvBaseline'                  :   None
     }
 
-    #def __init__(self):
-
     def GetDAC(self, ch, dc):
         return SnConfigFrame().ConfigFrame['fDACS'][ch][dc]
 
@@ -238,13 +236,13 @@ def LoadDEFCONF():
         SetDEFCONF(infn)
         if DEBUG_SCF == True:
             print("Local DEFCONF file found.")
-            print("Local DEFCONF loaded..")
+            print("Local DEFCONF loaded.")
 
     else:
         print("No local DEFCONF found.")
         SnConfigFrame().ConfigFrame = DefaultConfig
         if DEBUG_SCF == True:
-            print("Default DEFCONF loaded..")
+            print("Default DEFCONF loaded.")
 
 if __name__=="__main__":
     LoadDEFCONF()

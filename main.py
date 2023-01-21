@@ -1,9 +1,10 @@
 # python main.py
 
 import numpy as np
-import smbus
+from smbus import SMBus
 import RPi.GPIO as GPIO
 import time
+
 from SnConstants import *
 from SnPreCompOptions import *
 from SnConfigFrame import *
@@ -77,30 +78,35 @@ if __name__=="__main__":
     if DEBUG == True:
         print("System Starting...")
 
-    # Initialize and Assign IO pins
-    bus = smbus.SMBus(1)
+    # Create Shortcuts
+    C = SnConfigFrame.SnConfigFrame()
 
-    GPIO.setmode(GPIO.BOARD)
+    # Initialize and Assign IO pins
+    bus = SMBus(1)                          # I2C Pins 3, 5
+    GPIO.setmode(GPIO.BOARD)                # Sets GPIO Function Input Format [Pin or GPIO]
 
     # Output Pins
-    GPIO.setup(33, GPIO.OUT, initial=1)     # Card/ Data Taking Power [False]
+    GPIO.setup(33, GPIO.OUT, initial=0)     # Card/ Data Taking Power [False]
     GPIO.setup(36, GPIO.OUT, initial=0)     # Amp Power [False]
-    GPIO.setup(38, GPIO.OUT, initial=0)     # Unused Pin [False]
+    GPIO.setup(38, GPIO.OUT, initial=0)     # UNUSED Pin [False]
     GPIO.setup(40, GPIO.OUT, initial=0)     # Iridium Power [False]
 
-    #GPIO.setup(35, GPIO.OUT, initial=0)  # Power Probe 1
-    #GPIO.setup(37, GPIO.OUT, initial=0)  # Power Probe 2
+    # Input Pins
+    #GPIO.setup(35, GPIO.IN)    # Power Probe 1
+    #GPIO.setup(37, GPIO.IN)    # Power Probe 2
 
-    # Pins 39, 34 are GND Pins
+    # Pin 32 Temp Probe [No IO Initialization Needed]
+    # GND Pins 34, 39
 
+    # Load & Set Board Configurations
     LoadDEFCONF()
     if DEBUG == True:
         print("Configuration File Loaded.")
 
+    # Set Pins to Configuration Settings
+    GPIO.output(33, 1)      # Card/ Data Taking Power
+
     #SetSstDACs(0)
 
-    print(' rom: ' + read_rom())
-    while True:
-        print(' C=%3.3f  F=%3.3f' % read_temp())
-    time.sleep(1)
+
 

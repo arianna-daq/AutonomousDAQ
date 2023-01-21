@@ -1,6 +1,4 @@
-import os
-import glob
-import time
+import os, glob, time
 
 # These tow lines mount the device:
 os.system('modprobe w1-gpio')
@@ -41,3 +39,8 @@ def read_temp():
         return temp_c, temp_f
 
 
+if __name__=="__main__":
+    print(' rom: ' + read_rom())
+    while True:
+        print(' C=%3.3f  F=%3.3f' % read_temp())
+    time.sleep(1)
