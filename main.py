@@ -3,9 +3,11 @@
 import numpy as np
 import smbus
 import RPi.GPIO as GPIO
+import time
 from SnConstants import *
 from SnPreCompOptions import *
 from SnConfigFrame import *
+from SnTempFrame import *
 
 def SetSstDACs(bus):
     """Sends the High and Low Thresholds to the LTC2657 DAC Chip via I2C"""
@@ -81,7 +83,7 @@ if __name__=="__main__":
     GPIO.setmode(GPIO.BOARD)
 
     # Output Pins
-    GPIO.setup(33, GPIO.OUT, initial=0)     # Card/ Data Taking Power [False]
+    GPIO.setup(33, GPIO.OUT, initial=1)     # Card/ Data Taking Power [False]
     GPIO.setup(36, GPIO.OUT, initial=0)     # Amp Power [False]
     GPIO.setup(38, GPIO.OUT, initial=0)     # Unused Pin [False]
     GPIO.setup(40, GPIO.OUT, initial=0)     # Iridium Power [False]
@@ -96,4 +98,9 @@ if __name__=="__main__":
         print("Configuration File Loaded.")
 
     #SetSstDACs(0)
+
+    print(' rom: ' + read_rom())
+    while True:
+        print(' C=%3.3f  F=%3.3f' % read_temp())
+    time.sleep(1)
 

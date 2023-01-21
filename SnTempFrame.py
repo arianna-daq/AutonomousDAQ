@@ -41,7 +41,3 @@ def read_temp():
         return temp_c, temp_f
 
 
-print(' rom: ' + read_rom())
-while True:
-    print(' C=%3.3f  F=%3.3f' % read_temp())
-time.sleep(1)
