@@ -79,11 +79,17 @@ if __name__=="__main__":
     bus = smbus.SMBus(1)
 
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(33, GPIO.OUT, initial=1)     # Card/ Data Taking Power [False]
+
+    # Output Pins
+    GPIO.setup(33, GPIO.OUT, initial=0)     # Card/ Data Taking Power [False]
     GPIO.setup(36, GPIO.OUT, initial=0)     # Amp Power [False]
+    GPIO.setup(38, GPIO.OUT, initial=0)     # Unused Pin [False]
     GPIO.setup(40, GPIO.OUT, initial=0)     # Iridium Power [False]
 
+    #GPIO.setup(35, GPIO.OUT, initial=0)  # Power Probe 1
+    #GPIO.setup(37, GPIO.OUT, initial=0)  # Power Probe 2
 
+    # Pins 39, 34 are GND Pins
 
     LoadDEFCONF()
     if DEBUG == True:
