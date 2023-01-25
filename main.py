@@ -3,7 +3,7 @@
 import numpy as np
 from smbus import SMBus
 import RPi.GPIO as GPIO
-import time
+from time import sleep
 
 from SnConstants import *
 from SnPreCompOptions import *
@@ -126,6 +126,6 @@ if __name__=="__main__":
 
     ##SetSstDACs()
 
-    time.sleep(10)
+    sleep(10)
     GPIO.cleanup()
 
