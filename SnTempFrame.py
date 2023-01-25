@@ -72,8 +72,7 @@ def UpdateTemperature():
     for tries in range(kMaxTempReadTries):
         if DEBUG_STF == True:
             print("Number of Tries Left: %d" % (3 - tries))
-        #Tdata = TempReading()
-        Tdata = -1
+        Tdata = TempReading()
 
         if Tdata != -1:
             SnTempFrame().TempData['fTemp'] = Tdata
