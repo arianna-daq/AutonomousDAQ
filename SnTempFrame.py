@@ -1,4 +1,4 @@
-from os.path import exists
+import os
 from glob import glob
 from time import time
 from SnConstants import *
