@@ -83,7 +83,8 @@ def UpdateTemperature():
             SnTempFrame().SetTempCheck(True)
 
             if DEBUG_STF == True:
-                print(SnTempFrame().GetTempCheck())
+                print("Temperature Reading: %d [C]" % (SnTempFrame().TempData['fTemp']))
+                print("Temperature Taken at: %d [ms]" % (SnTempFrame().TempData['fTempTime']))
             break
 
         elif tries == 2:
@@ -97,6 +98,3 @@ if __name__=="__main__":
         i += 1
         UpdateTemperature()
 
-        if DEBUG_STF == True:
-            print("Temperature Reading: " + str(SnTempFrame().TempData['fTemp']) + " C")
-            print("Temperature Taken at: " + str(SnTempFrame().TempData['fTempTime']))

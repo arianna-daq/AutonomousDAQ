@@ -17,6 +17,7 @@ T = SnTempFrame()
 # Initialize and Assign IO pins
 bus = SMBus(1)                          # I2C Pins 3, 5
 GPIO.setmode(GPIO.BOARD)                # Sets GPIO Function Input Format [Pin or GPIO]
+GPIO.setwarnings(False)                 # Turn off GPIO Set Warnings
 
 # Output Pins
 GPIO.setup(33, GPIO.OUT, initial=0)     # Card/ Data Taking Power [False]
