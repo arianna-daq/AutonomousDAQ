@@ -95,10 +95,10 @@ def SetSstDACs():
 
 def ProcTempCheck():
     # Reset Temp Check Monitor
-    T.goodTempCheck = False
+    T.SetTempCheck(False)
     UpdateTemperature()
 
-    if T.goodTempCheck == True:
+    if T.GetTempCheck() == True:
         #Save Temp to .dat file
         if DEBUG == True:
             print("Temp %d [C] Saved to SD at %d [ms]" % T.GetTemperature(), T.GetTempTimeStamp())

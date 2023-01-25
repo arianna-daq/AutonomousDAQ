@@ -8,12 +8,10 @@ from SnConstants import *
 DEBUG_STF = True
 
 class SnTempFrame:
-    goodTempCheck = False
-
     TempData = {
-        'fTemp': None,
-        'fTempTime': None,
-
+        'fTemp'         : None,
+        'fTempTime'     : None,
+        'goodTempCheck' : False
     }
 
     def GetTemperature(self):
@@ -21,6 +19,12 @@ class SnTempFrame:
 
     def GetTempTimeStamp(self):
         return SnTempFrame().TempData['fTempTime']
+
+    def GetTempCheck(self):
+        return SnTempFrame().TempData['goodTempCheck']
+
+    def SetTempCheck(self, set):
+        SnTempFrame().TempData['goodTempCheck'] = set
 
 def checkFileExists(infn):
     if not os.path.exists(infn):
@@ -76,9 +80,10 @@ def UpdateTemperature():
         if Tdata != -1:
             SnTempFrame().TempData['fTemp'] = Tdata
             SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
-            SnTempFrame().goodTempCheck = True
+            SnTempFrame().SetTempCheck(True)
+
             if DEBUG_STF == True:
-                print(SnTempFrame().goodTempCheck)
+                print(SnTempFrame().GetTempCheck())
             break
 
         elif tries == 2:
