@@ -77,6 +77,8 @@ def UpdateTemperature():
             SnTempFrame().TempData['fTemp'] = Tdata
             SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
             SnTempFrame().goodTempCheck = True
+            if DEBUG_STF == True:
+                print(SnTempFrame().goodTempCheck)
             break
 
         elif tries == 2:
