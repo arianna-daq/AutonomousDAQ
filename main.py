@@ -101,7 +101,7 @@ def ProcTempCheck():
     if T.GetTempCheck() == True:
         #Save Temp to .dat file
         if DEBUG == True:
-            print("Temp %d [C] Saved to SD at %d [ms]" % T.GetTemperature(), T.GetTempTimeStamp())
+            print("Temp %d [C] Saved to SD at %d [ms]" % (T.GetTemperature(), T.GetTempTimeStamp()))
     else:
         # Save -1 in temp as sign of issue
         if DEBUG == True:
