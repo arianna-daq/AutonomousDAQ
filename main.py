@@ -95,6 +95,9 @@ def SetSstDACs():
                 print("Channel %d: Transmitted? %s " % (ch, dok))
 
 def ProcTempCheck():
+    """Measures the Temperature of the Environment surrounding the DAQ+. Processes the
+    Temperature Data and stores it in the .DAT file."""
+
     # Reset Temp Check Monitor
     T.SetTempCheck(False)
     UpdateTemperature()
@@ -102,11 +105,11 @@ def ProcTempCheck():
     if T.GetTempCheck() == True:
         #Save Temp to .dat file
         if DEBUG == True:
-            print("Temp %d [C] Saved to SD at %d [ms]" % (T.GetTemperature(), T.GetTempTimeStamp()))
+            print("Temp %f [C] Saved to SD at %d [ms]" % (T.GetTemperature(), T.GetTempTimeStamp()))
     else:
         # Save -1 in temp as sign of issue
         if DEBUG == True:
-            print("Error while taking Temp: Value -1 at %d [ms]" % T.GetTempTimeStamp())
+            print("Error while taking Temp: Value -1 at %d [ms]" % (T.GetTempTimeStamp()))
 
 
 if __name__=="__main__":

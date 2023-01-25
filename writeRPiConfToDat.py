@@ -72,7 +72,8 @@ BitArray = {
     "L1TrigEnable"      : 0,
     "PowerOnFor"        : 0
 }
-
+# WARNING: Do Not Change Order or Byte Size
+# If Changed Must Also Change SnConfigFrame.py
 ConfSettings = {
     'ConfLabel'                     : 63,
     'Run'                           :  2,

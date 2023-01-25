@@ -57,6 +57,8 @@ class SnConfigFrame:
 # Local Input DEFCONF File
 infn    = "./DEFCONF.DAT"
 
+# WARNING: Do Not Change Order or Byte Size
+# If Changed Must Also Change writeRPiConfToDat.py
 ConfSettings = {
     'ConfLabel'                     : 63,
     'Run'                           :  2,
