@@ -37,7 +37,7 @@ def TempReading():
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
     TempFile = glob('/sys/bus/w1/devices/'+ '28*')[0] + '/w1_slave'
-    if checkFileExists() == False:
+    if checkFileExists(TempFile) == False:
         return -1
     lines = ReadTempFile(TempFile)
 
