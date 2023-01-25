@@ -3,10 +3,10 @@
 # depend on it.
 #
 # the (unique!) label for this config
-ConfLabel=FreezerTests
+ConfLabel=RpiTesting
 #
 # the run number and first sequence number
-Run=1400
+Run=789
 FirstSeq=0
 #
 # number of X per sequence, where X is either saved triggered events (default)
@@ -70,8 +70,8 @@ RunMode=DiffTrig
 #RunMode=SkipTrgStartReset
 #
 # (SST)  DACS= channel : dac low thresh, dac high thresh
-DACS= 0 : 20700,26089
-DACS= 1 : 21182,25996
+DACS= 0 : 200,40000
+DACS= 1 : 200,40000
 DACS= 2 : 200,40000
 DACS= 3 : 200,40000
 DACS= 4 : 200,40000
