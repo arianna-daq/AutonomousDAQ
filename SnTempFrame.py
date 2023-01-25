@@ -4,8 +4,8 @@ from time import time
 from SnConstants import *
 
 # if True, prints debugging outputs
-DEBUG_STF = False
-#DEBUG_STF = True
+#DEBUG_STF = False
+DEBUG_STF = True
 
 class SnTempFrame:
     goodTempCheck = False
