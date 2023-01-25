@@ -5,8 +5,8 @@ from os.path import exists, getsize
 import binascii as bas
 
 # if True, prints debugging outputs
-#DEBUG_SCF = False
-DEBUG_SCF = True
+DEBUG_SCF = False
+#DEBUG_SCF = True
 
 # Local Input DEFCONF File
 infn    = "./DEFCONF.DAT"
@@ -136,6 +136,7 @@ def getConfLabel(byte):
     for i in byte:
         hTemp = format(i, 'x')
         if hTemp != '0':
+            # NOTE: This Piece of Code Does Not Always Run in Local Versions of Python
             Temp += bas.a2b_hex("%s" % (hTemp.strip())).decode("ASCII").replace(';', '\n- ')
     return Temp
 

@@ -46,26 +46,22 @@ kMinSingleFreqSuppRatio  = 26        # [0.1] Min Cut Value (L1 < 0.1)
 kMaxSingleFreqSuppRatio  = 255       # [1.0] Min Cut Value (L1 < 1.0)
 kDefSingleFreqSuppRatio  = 77        # [0.3] Default Value (L1 = 0.3)
 
-kTotSampsSst8ch  = kNchansEightAnt * kNsampsSst
-kTotDacsSst8ch   = kNchansEightAnt * kNchanDacsSst
+kTotSampsSst8ch   = kNchansEightAnt * kNsampsSst
+kTotDacsSst8ch    = kNchansEightAnt * kNchanDacsSst
 kNstopBytesSst8ch = kNchipsSst8ch * (kNsampsSst / BITS_IN_CHAR)
+kNchans           = kNchansEightAnt
+kNsamps           = kNsampsSst
+kNchanDacs        = kNchanDacsSst
+kNstopBytes       = kNstopBytesSst8ch
+kTotSamps         = kNchans * kNsamps
+kTotDacs          = kNchans * kNchanDacs
 
-if CHIPBOARD == SST8CH:
-    kNchans          = kNchansEightAnt
-    kNsamps          = kNsampsSst
-    kNchanDacs       = kNchanDacsSst
-    kNstopBytes      = kNstopBytesSst8ch
-    kNumLTC2657s     = 2             # Number of DAC Chips per Board
-    kChansPerLTC2657 = 4             # Number of CHs Assigned per DAC
-    kLTC2657Addr     = [0x41, 0x32]  # LTC2657 Slave Addr \\ BIT Form: [10000010, 01100100]
-    kUpdateDacCmd    = 3             # LTC2657 Write Command \\ BIT Form: [0011]
-    kMaxDacSetTries  = 3             # Try to Set DACs N Times
-
-else:
-    raise ("CHIPBOARD Not Defined in SnPreCompOptions.py")
-
-kTotSamps    = kNchans * kNsamps
-kTotDacs     = kNchans * kNchanDacs
+kNumLTC2657s      = 2             # Number of DAC Chips per Board
+kChansPerLTC2657  = 4             # Number of CHs Assigned per DAC
+kLTC2657Addr      = [0x41, 0x32]  # LTC2657 Slave Addr \\ BIT Form: [10000010, 01100100]
+kUpdateDacCmd     = 3             # LTC2657 Write Command \\ BIT Form: [0011]
+kMaxDacSetTries   = 3             # Try to Set DACs N Times
+kMaxTempReadTries = 3             # Try to Update Temp Reading N Times
 
 # RunMode Options
 kSingleSeq              = BIT(0) # if 0, infinite sequences

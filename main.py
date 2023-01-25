@@ -7,6 +7,7 @@ import numpy as np
 
 from SnConstants import *
 from SnPreCompOptions import *
+from SnTempFrame import SnTempFrame, UpdateTemperature
 from SnConfigFrame import SnConfigFrame, LoadDEFCONF
 ##from SnTempFrame import *
 
@@ -71,8 +72,6 @@ def SetSstDACs(bus):
 
             if DEBUG == True:
                 print("Channel %d: Transmitted? %s " % (ch, dok))
-
-
 
 if __name__=="__main__":
     if DEBUG == True:

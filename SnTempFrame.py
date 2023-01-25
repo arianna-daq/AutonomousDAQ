@@ -1,48 +1,73 @@
-import os, glob, time
+from os.path import exists
+from glob import glob
+from time import time
+from SnConstants import *
 
+# if True, prints debugging outputs
+DEBUG_STF = False
+#DEBUG_STF = True
 
-def TempReading():
-    # These tow lines mount the device:
-    os.system('modprobe w1-gpio')
-    os.system('modprobe w1-therm')
+class SnTempFrame:
+    TempData = {
+        'fTemp': None,
+        'fTempTime': None,
+    }
 
-    base_dir = '/sys/bus/w1/devices/'
-    # Get all the filenames begin with 28 in the path base_dir.
-    device_folder = glob.glob(base_dir + '28*')[0]
-    device_file = device_folder + '/w1_slave'
+    def GetTemperature(self):
+        return SnTempFrame().TempData['fTemp']
 
+    def GetTempTimeStamp(self):
+        return SnTempFrame().TempData['fTempTime']
 
-def read_rom():
-    name_file = device_folder + '/name'
-    f = open(name_file, 'r')
-    return f.readline()
+def checkFileExists(infn):
+    if not os.path.exists(infn):
+        return False
+    else:
+        return True
 
-
-def read_temp_raw():
-    f = open(device_file, 'r')
+def ReadTempFile(TempFn):
+    f = open(TempFn, 'r')
     lines = f.readlines()
     f.close()
     return lines
 
+def TempReading():
+    # Mount the Temp Probe Pin
+    # Pin Infomation is Hard Coded in /boot/config.txt
+    os.system('modprobe w1-gpio')
+    os.system('modprobe w1-therm')
+    TempFile = glob('/sys/bus/w1/devices/'+ '28*')[0] + '/w1_slave'
+    if checkFileExists() == False:
+        return -1
+    lines = ReadTempFile(TempFile)
 
-def read_temp():
-    lines = read_temp_raw()
-    # Analyze if the last 3 characters are 'YES'.
-    while lines[0].strip()[-3:] != 'YES':
-        time.sleep(0.2)
-        lines = read_temp_raw()
-    # Find the index of 't=' in a string.
-    equals_pos = lines[1].find('t=')
-    if equals_pos != -1:
-        # Read the temperature .
-        temp_string = lines[1][equals_pos + 2:]
-        temp_c = float(temp_string) / 1000.0
-        temp_f = temp_c * 9.0 / 5.0 + 32.0
-        return temp_c, temp_f
+    # Check if Temp File for Measurement
+    if lines[0].strip()[-3:] == 'YES':
+        temp = lines[1].find('t=')
+        if temp != -1:
 
+            # Read Temperature
+            return float(lines[1][temp + 2:]) / 1000.0
+        else:
+            # Return -1 if Temp Data is Not Formatted Correctly
+            return -1
+    else:
+        # Return -1 if Temp File has NO Measurement
+        return -1
+
+def UpdateTemperature():
+    for tries in range(kMaxTempReadTries):
+        Tdata = TempReading()
+        if Tdata != -1 or tries == 2:
+            SnTempFrame().TempData['fTemp'] = Tdata
+            SnTempFrame().TempData.['fTempTime'] = int(time() * 1000)
+            break
 
 if __name__=="__main__":
-    print(' rom: ' + read_rom())
-    while True:
-        print(' C=%3.3f  F=%3.3f' % read_temp())
-    time.sleep(1)
+    i = 0
+    while i != 25:
+        i += 1
+        UpdateTemperature()
+        if DEBUG_STF == True:
+            print("Temperature Reading: " + str(SnTempFrame().TempData['fTemp']) + " C")
+            print("Temperature Taken at: " + str(SnTempFrame().TempData['fTempTime']))
