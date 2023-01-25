@@ -130,7 +130,6 @@ def SaveToDAT(inarr):
         elif call == 'ConfLabel':
             num = (63 - len(inarr[call]))
             for i in inarr[call]:
-                print(i)
                 HexArr += format(ord(i), 'x')
 
             for i in range(num):
