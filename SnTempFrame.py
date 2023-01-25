@@ -4,8 +4,8 @@ from time import time
 from SnConstants import *
 
 # if True, prints debugging outputs
-#DEBUG_STF = False
-DEBUG_STF = True
+DEBUG_STF = False
+#DEBUG_STF = True
 
 class SnTempFrame:
     TempData = {
@@ -37,15 +37,17 @@ def TempReading():
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
     TempFile = glob('/sys/bus/w1/devices/'+ '28*')[0] + '/w1_slave'
+
     if DEBUG_STF == True:
         print("Temperature File Location: %s" % TempFile)
+
     if checkFileExists(TempFile) == False:
         if DEBUG_STF == True:
             print("Temperature File Does Not Exists")
         return -1
-    lines = ReadTempFile(TempFile)
 
     # Check if Temp File for Measurement
+    lines = ReadTempFile(TempFile)
     if lines[0].strip()[-3:] == 'YES':
         temp = lines[1].find('t=')
         if temp != -1:
@@ -64,6 +66,7 @@ def UpdateTemperature():
         if DEBUG_STF == True:
             print("Number of Tries Left: %d" % (3 - tries))
         Tdata = TempReading()
+
         if Tdata != -1 or tries == 2:
             SnTempFrame().TempData['fTemp'] = Tdata
             SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
@@ -74,6 +77,7 @@ if __name__=="__main__":
     while i != 25:
         i += 1
         UpdateTemperature()
+
         if DEBUG_STF == True:
             print("Temperature Reading: " + str(SnTempFrame().TempData['fTemp']) + " C")
             print("Temperature Taken at: " + str(SnTempFrame().TempData['fTempTime']))
