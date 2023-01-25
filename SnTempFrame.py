@@ -60,7 +60,7 @@ def UpdateTemperature():
         Tdata = TempReading()
         if Tdata != -1 or tries == 2:
             SnTempFrame().TempData['fTemp'] = Tdata
-            SnTempFrame().TempData.['fTempTime'] = int(time() * 1000)
+            SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
             break
 
 if __name__=="__main__":
