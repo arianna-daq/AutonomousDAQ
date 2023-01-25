@@ -37,10 +37,10 @@ def TempReading():
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
     TempFile = glob('/sys/bus/w1/devices/'+ '28*')[0] + '/w1_slave'
-    if DEFCONF_STF == True:
+    if DEBUG_STF == True:
         print("Temperature File Location: %s" % TempFile)
     if checkFileExists(TempFile) == False:
-        if DEFCONF_STF == True:
+        if DEBUG_STF == True:
             print("Temperature File Does Not Exists")
         return -1
     lines = ReadTempFile(TempFile)
@@ -61,7 +61,7 @@ def TempReading():
 
 def UpdateTemperature():
     for tries in range(kMaxTempReadTries):
-        if DEFCONF_STF == True:
+        if DEBUG_STF == True:
             print("Number of Tries Left: %d" % (3 - tries))
         Tdata = TempReading()
         if Tdata != -1 or tries == 2:
