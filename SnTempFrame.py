@@ -72,10 +72,8 @@ def UpdateTemperature():
     for tries in range(kMaxTempReadTries):
         if DEBUG_STF == True:
             print("Number of Tries Left: %d" % (3 - tries))
-        Tdata = TempReading()
-
-        if DEBUG_STF == True:
-            print(Tdata)
+        #Tdata = TempReading()
+        Tdata = -1
 
         if Tdata != -1:
             SnTempFrame().TempData['fTemp'] = Tdata
@@ -83,13 +81,18 @@ def UpdateTemperature():
             SnTempFrame().SetTempCheck(True)
 
             if DEBUG_STF == True:
-                print("Temperature Reading: %d [C]" % (SnTempFrame().TempData['fTemp']))
+                print("Temperature Reading: %f [C]" % (SnTempFrame().TempData['fTemp']))
                 print("Temperature Taken at: %d [ms]" % (SnTempFrame().TempData['fTempTime']))
             break
 
         elif tries == 2:
             SnTempFrame().TempData['fTemp'] = Tdata
             SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
+
+            if DEBUG_STF == True:
+                print("Temperature Measurement Encountered Errors: Temp Value -1")
+                print("Temperature Reading: %f [C]" % (SnTempFrame().TempData['fTemp']))
+                print("Temperature Taken at: %d [ms]" % (SnTempFrame().TempData['fTempTime']))
             break
 
 if __name__=="__main__":
