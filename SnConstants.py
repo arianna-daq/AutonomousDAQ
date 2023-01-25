@@ -67,6 +67,48 @@ else:
 kTotSamps    = kNchans * kNsamps
 kTotDacs     = kNchans * kNchanDacs
 
+# RunMode Options
+kSingleSeq              = BIT(0) # if 0, infinite sequences
+kCountPower             = BIT(1) # if 0, count events
+kDualThresh             = BIT(2) # if 0, single sided thresholds on SST
+kDiffTrig               = BIT(3) # if 0, send result of each comparator on SST
+kLowPwrSBDonly          = BIT(4) # if 0, low power afar / sbd power settings same as normal.if 1, afar off and sbd on during low power mode
+kRunSeqListOneCommWin   = BIT(5) # if 0, only clear run / seq list after files sent from it
+kIgnoreSDcard           = BIT(6) # if 0, read / write data to SD card as normal.if 1, function as though no SD card is present
+kCommPowerSimple        = BIT(7) # if 0, comm periphs powered as needed during comm win.if 1, power adjusted once at start / finish of comm win
+kCommWinEachEvent       = BIT(8) # if 0, comm windows only after comm period of seconds. if 1, comm winodows also after each event that qualifies for saving to SD card
+kSkipTrgStartReset      = BIT(9) # if 0, the digitizer (SST) is reset when the mbed starts waiting for triggers. if 0, no reset occurs, which can cause an immediate readout if the chip had triggered before the mbed was ready
+
+# Communication Types
+kIridCommType           = BIT(0) # if 1, communicating with Iridium is active
+
+# L Filter Options
+kSingleFreqSupp         = BIT(0) # if 1, activate single frequency filter better known as L1
+kNeuralNetFilter        = BIT(1) # if 1, activate neural net filter
+
+# Power On Options
+kAmpsDatTak             = BIT(0)
+kCardDatTak             = BIT(1)
+kIridDatTak             = BIT(2)
+kAmpsComWin             = BIT(3)
+kCardComWin             = BIT(4)
+kIridComWin             = BIT(5)
+
+# Communication Send Data Options
+kDefaultSendData            = BIT(0)
+kAllFiles                   = BIT(1)
+kCloseOnTimeout             = BIT(2)
+kDeleteIfReceived           = BIT(3)
+kForceSBDtoSendFileData     = BIT(4)
+kHandshakeBeforeSendData    = BIT(5)
+kSendRunSeqList             = BIT(6)
+kStatSendConf               = BIT(7)
+kStatSendTrgTim             = BIT(8)
+kStatSendPwrDat             = BIT(9)
+kStatSendEvent              = BIT(10)
+kStatSendHtbt               = BIT(11)
+kStatSendTmpDat             = BIT(12)
+
 class ETrigBit:
     '''A "Look Up Table: for the Locations and Values of Event Frame Variables.
     Each Variable Vit is one Bit of a 16 Bit Variable fTrigBits used in

@@ -1,14 +1,14 @@
 # python main.py
 
 import numpy as np
-from smbus import SMBus
-import RPi.GPIO as GPIO
-import time
+##from smbus import SMBus
+##import RPi.GPIO as GPIO
+##import time
 
 from SnConstants import *
 from SnPreCompOptions import *
-from SnConfigFrame import *
-from SnTempFrame import *
+from SnConfigFrame import SnConfigFrame, LoadDEFCONF
+##from SnTempFrame import *
 
 def SetSstDACs(bus):
     """Sends the High and Low Thresholds to the LTC2657 DAC Chip via I2C"""
@@ -79,21 +79,21 @@ if __name__=="__main__":
         print("System Starting...")
 
     # Create Shortcuts
-    C = SnConfigFrame.SnConfigFrame()
+    C = SnConfigFrame()
 
     # Initialize and Assign IO pins
-    bus = SMBus(1)                          # I2C Pins 3, 5
-    GPIO.setmode(GPIO.BOARD)                # Sets GPIO Function Input Format [Pin or GPIO]
+    ##bus = SMBus(1)                          # I2C Pins 3, 5
+    ##GPIO.setmode(GPIO.BOARD)                # Sets GPIO Function Input Format [Pin or GPIO]
 
     # Output Pins
-    GPIO.setup(33, GPIO.OUT, initial=0)     # Card/ Data Taking Power [False]
-    GPIO.setup(36, GPIO.OUT, initial=0)     # Amp Power [False]
-    GPIO.setup(38, GPIO.OUT, initial=0)     # UNUSED Pin [False]
-    GPIO.setup(40, GPIO.OUT, initial=0)     # Iridium Power [False]
+    ##GPIO.setup(33, GPIO.OUT, initial=0)     # Card/ Data Taking Power [False]
+    ##GPIO.setup(36, GPIO.OUT, initial=0)     # Amp Power [False]
+    ##GPIO.setup(38, GPIO.OUT, initial=0)     # UNUSED Pin [False]
+    ##GPIO.setup(40, GPIO.OUT, initial=0)     # Iridium Power [False]
 
     # Input Pins
-    #GPIO.setup(35, GPIO.IN)    # Power Probe 1
-    #GPIO.setup(37, GPIO.IN)    # Power Probe 2
+    #GPIO.setup(35, GPIO.IN)    # Power Probe 1 [UNUSED Pin]
+    #GPIO.setup(37, GPIO.IN)    # Power Probe 2 [UNUSED Pin]
 
     # Pin 32 Temp Probe [No IO Initialization Needed]
     # GND Pins 34, 39
@@ -103,10 +103,12 @@ if __name__=="__main__":
     if DEBUG == True:
         print("Configuration File Loaded.")
 
-    # Set Pins to Configuration Settings
-    GPIO.output(33, 1)      # Card/ Data Taking Power
+    # Set Pins to Configuration Settings [DATA TAKING PHASE]
+    ##GPIO.output(33, bool(C.ConfigFrame['PowerOnFor'] & kCardDatTak))      # Card/ Data Taking Power
+    ##GPIO.output(36, bool(C.ConfigFrame['PowerOnFor'] & kAmpsDatTak))      # Amp Power
+    ##GPIO.output(40, bool(C.ConfigFrame['PowerOnFor'] & kIridDatTak))      # Iridium Power
 
-    #SetSstDACs(0)
+    ##SetSstDACs(0)
 
 
 
