@@ -105,7 +105,7 @@ def ProcTempCheck():
     else:
         # Save -1 in temp as sign of issue
         if DEBUG == True:
-            print("Error while taking Temp: Value %d at %d [ms]" % -1, T.GetTempTimeStamp())
+            print("Error while taking Temp: Value -1 at %d [ms]" % T.GetTempTimeStamp())
 
 
 if __name__=="__main__":
@@ -126,5 +126,6 @@ if __name__=="__main__":
 
     ##SetSstDACs()
 
-
+    time.sleep(10)
+    GPIO.cleanup()
 
