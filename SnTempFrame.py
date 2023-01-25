@@ -8,9 +8,12 @@ DEBUG_STF = False
 #DEBUG_STF = True
 
 class SnTempFrame:
+    goodTempCheck = False
+
     TempData = {
         'fTemp': None,
         'fTempTime': None,
+
     }
 
     def GetTemperature(self):
@@ -67,7 +70,13 @@ def UpdateTemperature():
             print("Number of Tries Left: %d" % (3 - tries))
         Tdata = TempReading()
 
-        if Tdata != -1 or tries == 2:
+        if Tdata != -1:
+            SnTempFrame().TempData['fTemp'] = Tdata
+            SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
+            SnTempFrame().goodTempCheck = True
+            break
+
+        elif tries == 2:
             SnTempFrame().TempData['fTemp'] = Tdata
             SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
             break

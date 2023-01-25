@@ -93,6 +93,21 @@ def SetSstDACs():
             if DEBUG == True:
                 print("Channel %d: Transmitted? %s " % (ch, dok))
 
+def ProcTempCheck():
+    # Reset Temp Check Monitor
+    T.goodTempCheck = False
+    UpdateTemperature()
+
+    if T.goodTempCheck == True:
+        #Save Temp to .dat file
+        if DEBUG == True:
+            print("Temp %d [C] Saved to SD at %d [ms]" % T.GetTemperature(), T.GetTempTimeStamp())
+    else:
+        # Save -1 in temp as sign of issue
+        if DEBUG == True:
+            print("Error while taking Temp: Value %d at %d [ms]" % -1, T.GetTempTimeStamp())
+
+
 if __name__=="__main__":
     if DEBUG == True:
         print("Main Code Starting...")
@@ -106,6 +121,8 @@ if __name__=="__main__":
     GPIO.output(33, C.GetPowerOnFor(kCardDatTak))   # Card/ Data Taking Power
     GPIO.output(36, C.GetPowerOnFor(kAmpsDatTak))   # Amp Power
     GPIO.output(40, C.GetPowerOnFor(kIridDatTak))   # Iridium Power
+
+    ProcTempCheck()
 
     ##SetSstDACs()
 
