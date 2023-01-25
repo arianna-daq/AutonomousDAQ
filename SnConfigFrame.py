@@ -8,6 +8,52 @@ import binascii as bas
 DEBUG_SCF = False
 #DEBUG_SCF = True
 
+class SnConfigFrame:
+    ConfigFrame = {
+        'flabel'                      : 'None',
+        'fRun'                        :   None,
+        'fFirstSeq'                   :   None,
+        'fEvtsPerSeq'                 :   None,
+        'fRunMode'                    :   None,
+        'fDACS'                       : {
+                        0: [None, None],
+                        1: [None, None],
+                        2: [None, None],
+                        3: [None, None],
+                        4: [None, None],
+                        5: [None, None],
+                        6: [None, None],
+                        7: [None, None]
+                        },
+        'fNumCardsMajLog'             :   None,
+        'fEnableThermTrig'            :   None,
+        'fForcedPeriod'               :   None,
+        'fHeartbeatPeriod'            :   None,
+        'fThrottlePeriod'             :   None,
+        'fVoltCheckPeriod'            :   None,
+        'fTempPeriod'                 :   None,
+        'CommWinSendData'             :   None,
+        'CommWinPeriod'               :   None,
+        'CommWinDuration'             :   None,
+        'CommWinConnectTOmins'        :   [None, None],
+        'CommWinListenTOmins'         :   [None, None],
+        'L1TrigEnable'                :   None,
+        'L1TrigsApplied'              :   None,
+        'L1Scaledown'                 :   None,
+        'L1SingleFreqSuppressRatio'   :   None,
+        'PowerOnFor'                  :   None,
+        'WatchdogPeriod'              :   None,
+        'WvLoseLSB'                   :   None,
+        'WvLoseMSB'                   :   None,
+        'WvBaseline'                  :   None
+    }
+
+    def GetDAC(self, ch, dc):
+        return SnConfigFrame().ConfigFrame['fDACS'][ch][dc]
+
+    def GetPowerOnFor(self, powOpt):
+        return bool(SnConfigFrame().ConfigFrame['PowerOnFor'] & powOpt)
+
 # Local Input DEFCONF File
 infn    = "./DEFCONF.DAT"
 
@@ -81,49 +127,6 @@ DefaultConfig = {
     'WvLoseMSB'                         :    4,
     'WvBaseline'                        :    0
 }
-
-class SnConfigFrame:
-    ConfigFrame = {
-        'flabel'                      : 'None',
-        'fRun'                        :   None,
-        'fFirstSeq'                   :   None,
-        'fEvtsPerSeq'                 :   None,
-        'fRunMode'                    :   None,
-        'fDACS'                       : {
-                        0: [None, None],
-                        1: [None, None],
-                        2: [None, None],
-                        3: [None, None],
-                        4: [None, None],
-                        5: [None, None],
-                        6: [None, None],
-                        7: [None, None]
-                        },
-        'fNumCardsMajLog'             :   None,
-        'fEnableThermTrig'            :   None,
-        'fForcedPeriod'               :   None,
-        'fHeartbeatPeriod'            :   None,
-        'fThrottlePeriod'             :   None,
-        'fVoltCheckPeriod'            :   None,
-        'fTempPeriod'                 :   None,
-        'CommWinSendData'             :   None,
-        'CommWinPeriod'               :   None,
-        'CommWinDuration'             :   None,
-        'CommWinConnectTOmins'        :   [None, None],
-        'CommWinListenTOmins'         :   [None, None],
-        'L1TrigEnable'                :   None,
-        'L1TrigsApplied'              :   None,
-        'L1Scaledown'                 :   None,
-        'L1SingleFreqSuppressRatio'   :   None,
-        'PowerOnFor'                  :   None,
-        'WatchdogPeriod'              :   None,
-        'WvLoseLSB'                   :   None,
-        'WvLoseMSB'                   :   None,
-        'WvBaseline'                  :   None
-    }
-
-    def GetDAC(self, ch, dc):
-        return SnConfigFrame().ConfigFrame['fDACS'][ch][dc]
 
 def checkDEFCONF(infn):
     if not exists(infn):
@@ -247,6 +250,7 @@ def SetDEFCONF(infn):
     if DEBUG_SCF == True:
         for key, value in SCF.items():
             print(key, value)
+
 def LoadDEFCONF():
     if checkDEFCONF(infn) == True:
         DEF_LOADED = SetDEFCONF(infn)

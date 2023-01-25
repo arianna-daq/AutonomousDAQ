@@ -26,7 +26,6 @@ DISABLE_CONFIG_SAFETYNETS = False
 
 #
 # // choose which communication peripherals will be used in the comms loop
-# // for now, twitter is completely not working.
 # // NOTE: remember to set kNcomms in SnConstants.h so it equals the number
 # // of comms enabled!!
 ENABLE_SBD_COMM = True
