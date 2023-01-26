@@ -252,16 +252,20 @@ def SetDEFCONF(infn):
     if DEBUG_SCF == True:
         for key, value in SCF.items():
             print(key, value)
+    return True
 
 def LoadDEFCONF():
     if checkDEFCONF(infn) == True:
         DEF_LOADED = SetDEFCONF(infn)
-        if DEF_LOADED == True:
-            if DEBUG_SCF == True:
-                print("Local DEFCONF file found.")
-                print("Local DEFCONF loaded.")
+        if DEF_LOADED == True and DEBUG_SCF == True:
+            print("Local DEFCONF file found.")
+            print("Local DEFCONF loaded.")
 
-    elif DEF_LOADED == False:
+        elif DEF_LOADED == False:
+            SnConfigFrame().ConfigFrame = DefaultConfig
+            if DEBUG_SCF == True:
+                print("Default DEFCONF loaded.")
+    else:
         SnConfigFrame().ConfigFrame = DefaultConfig
         if DEBUG_SCF == True:
             print("Default DEFCONF loaded.")

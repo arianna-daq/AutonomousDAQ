@@ -96,7 +96,8 @@ def SetSstDACs():
 
 def ProcTempCheck():
     """Measures the Temperature of the Environment surrounding the DAQ+. Processes the
-    Temperature Data and stores it in the .DAT file."""
+    Temperature Data and stores it in the .DAT file. Note: Pin 33 (Card/ Data Taking)
+    needs to be High inorder for Temp Probe to have Power."""
 
     # Reset Temp Check Monitor
     T.SetTempCheck(False)
@@ -126,8 +127,7 @@ if __name__=="__main__":
     GPIO.output(36, C.GetPowerOnFor(kAmpsDatTak))   # Amp Power
     GPIO.output(40, C.GetPowerOnFor(kIridDatTak))   # Iridium Power
 
-    ProcTempCheck()
-
+    ##ProcTempCheck()
     ##SetSstDACs()
 
     sleep(10)
