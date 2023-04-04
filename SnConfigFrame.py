@@ -247,6 +247,7 @@ def SetDEFCONF(infn):
     if DEBUG_SCF == True:
         for key, value in SCF.items():
             print(key, value)
+
 def LoadDEFCONF():
     if checkDEFCONF(infn) == True:
         DEF_LOADED = SetDEFCONF(infn)
