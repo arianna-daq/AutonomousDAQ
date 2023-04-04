@@ -1,4 +1,4 @@
-from os.path import exists
+import os
 from glob import glob
 from time import time
 from SnConstants import *
@@ -9,8 +9,9 @@ DEBUG_STF = False
 
 class SnTempFrame:
     TempData = {
-        'fTemp': None,
-        'fTempTime': None,
+        'fTemp'         : None,
+        'fTempTime'     : None,
+        'goodTempCheck' : False
     }
 
     def GetTemperature(self):
@@ -18,6 +19,12 @@ class SnTempFrame:
 
     def GetTempTimeStamp(self):
         return SnTempFrame().TempData['fTempTime']
+
+    def GetTempCheck(self):
+        return SnTempFrame().TempData['goodTempCheck']
+
+    def SetTempCheck(self, set):
+        SnTempFrame().TempData['goodTempCheck'] = set
 
 def checkFileExists(infn):
     if not os.path.exists(infn):
@@ -37,11 +44,17 @@ def TempReading():
     os.system('modprobe w1-gpio')
     os.system('modprobe w1-therm')
     TempFile = glob('/sys/bus/w1/devices/'+ '28*')[0] + '/w1_slave'
-    if checkFileExists() == False:
+
+    if DEBUG_STF == True:
+        print("Temperature File Location: %s" % TempFile)
+
+    if checkFileExists(TempFile) == False:
+        if DEBUG_STF == True:
+            print("Temperature File Does Not Exists")
         return -1
-    lines = ReadTempFile(TempFile)
 
     # Check if Temp File for Measurement
+    lines = ReadTempFile(TempFile)
     if lines[0].strip()[-3:] == 'YES':
         temp = lines[1].find('t=')
         if temp != -1:
@@ -57,10 +70,28 @@ def TempReading():
 
 def UpdateTemperature():
     for tries in range(kMaxTempReadTries):
+        if DEBUG_STF == True:
+            print("Number of Tries Left: %d" % (3 - tries))
         Tdata = TempReading()
-        if Tdata != -1 or tries == 2:
+
+        if Tdata != -1:
             SnTempFrame().TempData['fTemp'] = Tdata
-            SnTempFrame().TempData.['fTempTime'] = int(time() * 1000)
+            SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
+            SnTempFrame().SetTempCheck(True)
+
+            if DEBUG_STF == True:
+                print("Temperature Reading: %f [C]" % (SnTempFrame().TempData['fTemp']))
+                print("Temperature Taken at: %d [ms]" % (SnTempFrame().TempData['fTempTime']))
+            break
+
+        elif tries == 2:
+            SnTempFrame().TempData['fTemp'] = Tdata
+            SnTempFrame().TempData['fTempTime'] = int(time() * 1000)
+
+            if DEBUG_STF == True:
+                print("Temperature Measurement Encountered Errors: Temp Value -1")
+                print("Temperature Reading: %f [C]" % (SnTempFrame().TempData['fTemp']))
+                print("Temperature Taken at: %d [ms]" % (SnTempFrame().TempData['fTempTime']))
             break
 
 if __name__=="__main__":
@@ -68,6 +99,4 @@ if __name__=="__main__":
     while i != 25:
         i += 1
         UpdateTemperature()
-        if DEBUG_STF == True:
-            print("Temperature Reading: " + str(SnTempFrame().TempData['fTemp']) + " C")
-            print("Temperature Taken at: " + str(SnTempFrame().TempData['fTempTime']))
+
