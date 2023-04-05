@@ -46,10 +46,10 @@ GPIO.setup(7, GPIO.IN)  # Data Ready Flag
 # GND Pins 6, 9, 14, 20, 25, 30,34, 39
 
 # Initialize Flag Variables
-    gFirstEvt    = True     # First Event of Sequence
-    gReadingOut  = False    # Readout Data from FPGA
-    gOpenCommWin = False    # Open Comm Window
-    gCheckTemp   = False    # Check Temperature
+gFirstEvt    = True     # First Event of Sequence
+gReadingOut  = False    # Readout Data from FPGA
+gOpenCommWin = False    # Open Comm Window
+gCheckTemp   = False    # Check Temperature
 
 def AreCardsPowered():  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     return True
