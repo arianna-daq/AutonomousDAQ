@@ -21,11 +21,11 @@ GPIO.setmode(GPIO.BOARD)  # Sets GPIO Function Input Format [Pin or GPIO]
 
 # Output Pins
 
-GPIO.setup(8, GPIO.OUT, initial=False)  # Reset Chips
+GPIO.setup(8, GPIO.OUT, initial=False)   # Reset Chips
 GPIO.setup(12, GPIO.OUT, initial=False)  # Enable Thermal Triggers
 GPIO.setup(13, GPIO.OUT, initial=False)  # Execute Forced Trigger
-GPIO.setup(15, GPIO.OUT, initial=True)  # FPGA Differential Select
-GPIO.setup(16, GPIO.OUT, initial=True)  # Dual Threshold Select
+GPIO.setup(15, GPIO.OUT, initial=True)   # FPGA Differential Select
+GPIO.setup(16, GPIO.OUT, initial=False)   # Dual Threshold Select !!!!!!!!!!!!!!!!!!!!!!!!!!
 GPIO.setup(26, GPIO.OUT, initial=False)  # Majority Logic Low Bit
 GPIO.setup(29, GPIO.OUT, initial=False)  # Majority Logic High Bit
 GPIO.setup(31, GPIO.OUT, initial=False)  # Reading Out Data Select
@@ -121,7 +121,7 @@ def WaitTrigAndSendClock():
     global gFirstevt, gReadingOut
 
     if DEBUG:
-        print("WaitTrigAndSendClock Executed")
+        print("WaitTrigAndSendClock Executed.")
         # Print Statements!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if AreCardsPowered():
         # Create SPI Link HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -154,17 +154,32 @@ if __name__=="__main__":
     if DEBUG:
         print("System Starting...")
 
+#def SetConfigAndMakeOuputfile(): # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if DEBUG:
+        print("SetConfigAndMakeOuputfile Executed.")
+
+    # WD RESET !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    GPIO.output(12, False)  # Enable Thermal Triggers
+    GPIO.output(13, False)  # Execute Forced Trigger
+    # HB Trigger HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    time.sleep(0.2)
+
     # Load & Set Board Configurations
     LoadDEFCONF()
     if DEBUG:
         print("Configuration File Loaded.")
 
+    SetSstDACs(bus)  # I2C Set SST Thresholds
+
     # Set Pins to Configuration Settings [DATA TAKING PHASE]
+    GPIO.output(12, bool(C.ConfigFrame['fEnableThermTrig']))              # Enable Thermal Triggers
+    #GPIO.output(13, bool(C.ConfigFrame['fEnableThermTrig']))              # Execute Forced Trigger
     GPIO.output(33, bool(C.ConfigFrame['PowerOnFor'] & kCardDatTak))      # Card/ Data Taking Power
     GPIO.output(36, bool(C.ConfigFrame['PowerOnFor'] & kAmpsDatTak))      # Amp Power
     GPIO.output(40, bool(C.ConfigFrame['PowerOnFor'] & kIridDatTak))      # Iridium Power
 
-    SetSstDACs(bus)       # I2C Set SST Thresholds
+
 
     while(True):
         if DEBUG:
