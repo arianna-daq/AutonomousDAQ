@@ -117,7 +117,7 @@ def SetSstDACs(bus):
 
 def WaitTrigAndSendClock():
     """   """
-    global gFirstevt, gReadingOut
+    global gFirstEvt, gReadingOut
 
     if DEBUG:
         print("WaitTrigAndSendClock Executed.")
