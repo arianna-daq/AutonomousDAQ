@@ -162,7 +162,7 @@ if __name__=="__main__":
     GPIO.output(13, False)  # Execute Forced Trigger
     # HB Trigger HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    time.sleep(0.2)
+    #time.sleep(0.2)
 
     # Load & Set Board Configurations
     LoadDEFCONF()
