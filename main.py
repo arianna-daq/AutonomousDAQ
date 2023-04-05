@@ -130,7 +130,7 @@ def WaitTrigAndSendClock():
             gFirstEvt = False
 
         if DEBUG:
-            print("Waiting for Trigger...)
+            print("Waiting for Trigger...")
 
         # Setting gReadingOut False Enables Force Triggers
         gReadingOut = False
