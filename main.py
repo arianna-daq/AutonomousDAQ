@@ -12,7 +12,6 @@ from SnConfigFrame import SnConfigFrame, LoadDEFCONF
 from SnTempFrame import *
 
 # Create Shortcuts
-M = MainFrame()
 C = SnConfigFrame()
 
 # Initialize and Assign IO pins
