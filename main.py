@@ -212,7 +212,7 @@ if __name__=="__main__":
         GPIO.output(31, False)
         WaitTrigAndSendClock()
 
-        if gReadingOut:
+        #if gReadingOut:
 
 
 
