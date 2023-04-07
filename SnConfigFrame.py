@@ -48,7 +48,7 @@ DefaultConfig = {
     'fRun'                              :    0,
     'fFirstSeq'                         :    0,
     'fEvtsPerSeq'                       :  300,
-    'fRunMode'                          : kDualThresh | kDiffTrig | kRunSeqListOneCommWin,
+    'fRunMode'                          : kDualThresh | kDiffTrig,
     'fDACS'                             : {
                                             0: [200, 40000],
                                             1: [200, 40000],
@@ -75,7 +75,7 @@ DefaultConfig = {
     'L1TrigsApplied'                    : False,
     'L1Scaledown'                       :   50,
     'L1SingleFreqSuppressRatio'         :   77,
-    'PowerOnFor'                        :   32,
+    'PowerOnFor'                        :  kIridComWin,
     'WatchdogPeriod'                    : 1200,
     'WvLoseLSB'                         :    0,
     'WvLoseMSB'                         :    4,
@@ -122,8 +122,28 @@ class SnConfigFrame:
         'WvBaseline'                  :   None
     }
 
+    def EnableThermTrig(self):
+        return bool(SnConfigFrame().ConfigFrame['fEnableThermTrig'])
+
     def GetDAC(self, ch, dc):
         return SnConfigFrame().ConfigFrame['fDACS'][ch][dc]
+
+    def PowerMode(self):
+        return format(SnConfigFrame().ConfigFrame['PowerOnFor'], '08b')
+
+    def SetDefaultConfig(self):
+        SnConfigFrame().ConfigFrame = DefaultConfig
+
+    def IsPoweredFor(self, PowOption):
+        return SnConfigFrame().ConfigFrame['PowerOnFor'] & PowOption
+
+    def IsRunMode(self, RMOption):
+        return SnConfigFrame().ConfigFrame['fRunMode'] & RMOption
+
+    def GetMajLog(self):
+        ML = format(SnConfigFrame().ConfigFrame['fNumCardsMajLog'], '02b')
+        return ML[1], ML[0]
+
 
 def checkDEFCONF(infn):
     if not exists(infn):

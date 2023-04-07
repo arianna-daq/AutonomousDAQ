@@ -50,7 +50,6 @@ How many bits are there per DAC register
 '''
 DAC_BITS = 16
 
-
 # // whether or not to use the flash memory on the mbed board, to call
 # // the mbed provided function that gets the MAC address, etc.
 # // these functions all use the mbed interface chip. it has been found
