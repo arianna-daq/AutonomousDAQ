@@ -310,7 +310,6 @@ if __name__=="__main__":
     # Load & Set Board Configurations
     LoadSetDEFCONF()
 
-    time.sleep(3)
 
     if DEBUG:
         print("Configuration File Loaded.")
