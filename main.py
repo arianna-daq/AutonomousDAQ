@@ -301,7 +301,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
 if __name__=="__main__":
     if DEBUG:
         print("System Starting...")
-        print("Local Time: %s" % (time.localtime()))
+        #print("Local Time: %s" % (time.localtime()))
         print("Startup Power; Card: %s, Amps: %, Irid: %s" %
               (GPIO.input(33), GPIO.input(36), GPIO.input(40)))
 
@@ -309,6 +309,8 @@ if __name__=="__main__":
 
     # Load & Set Board Configurations
     LoadSetDEFCONF()
+
+    time.sleep(3)
 
     if DEBUG:
         print("Configuration File Loaded.")
