@@ -302,7 +302,7 @@ if __name__=="__main__":
     if DEBUG:
         print("System Starting...")
         #print("Local Time: %s" % (time.localtime()))
-        print("Startup Power; Card: %s, Amps: %, Irid: %s" %
+        print("Startup Power; Card: %s, Amps: %s, Irid: %s" %
               (bool(GPIO.input(33)), bool(GPIO.input(36)), bool(GPIO.input(40))))
 
     # WatchDog Reset, Comms Settings, MAC Addr, Timing Settings, Tickers and Clocks
