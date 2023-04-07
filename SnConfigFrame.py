@@ -142,7 +142,7 @@ class SnConfigFrame:
 
     def GetMajLog(self):
         ML = format(SnConfigFrame().ConfigFrame['fNumCardsMajLog'], '02b')
-        return ML[1], ML[0]
+        return bool(ML[1]), bool(ML[0])
 
 
 def checkDEFCONF(infn):

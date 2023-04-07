@@ -230,7 +230,7 @@ def LoadSetDEFCONF():
     GPIO.output(15, bool(SnConfigFrame().IsRunMode(kDiffTrig)))
     GPIO.output(16, bool(SnConfigFrame().IsRunMode(kDualThresh)))
 
-    HighBit, LowBit = bool(SnConfigFrame().GetMajLog())
+    HighBit, LowBit = SnConfigFrame().GetMajLog()
     GPIO.output(26, LowBit)   # MajLog Low Bit
     GPIO.output(29, HighBit)  # MajLog High Bit
 
