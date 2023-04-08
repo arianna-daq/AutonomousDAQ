@@ -349,7 +349,7 @@ if __name__=="__main__":
         if gFirstEvt:
             # TIMER RESET HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            if not (C.ConfigFrame['fRunMode'] & kSkipTrgStartReset):
+            if not (SnConfigFrame().ConfigFrame['fRunMode'] & kSkipTrgStartReset):
                 if DEBUG:
                     print("----------------------------------------------------")
                     print("First Event Trigger Start Reset.")
