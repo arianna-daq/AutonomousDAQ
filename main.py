@@ -112,7 +112,7 @@ def SetPower(isCommWin): # MISSING WD
 
     # WAIT STATEMENT
     if DEBUG:
-        print("Power Set; CommWin?: %s, ConfigByte: % s, Card: %s, Amps: %, Irid: %s" %
+        print("Power Set; CommWin?: %s, ConfigByte: %s, Card: %s, Amps: %s, Irid: %s" %
               (bool(isCommWin), SnConfigFrame().PowerMode(), GPIO.input(33),
                GPIO.input(36), GPIO.input(40)))
 
@@ -319,14 +319,14 @@ if __name__=="__main__":
 
     if DEBUG:
         print("Run Mode")
-        print("IsSingleSeqMode: %s" % (bool(IsRunMode(kSingleSeq))))
-        print("IsCountPowerReading: %s" % (bool(IsRunMode(kCountPower))))
-        print("IsDualThresholdMode: %s" % (bool(IsRunMode(kDualThresh))))
-        print("IsDifferentialTrigMode: %s" % (bool(IsRunMode(kDiffTrig))))
-        print("IsSBDonlyLowPWRMode: %s" % (bool(IsRunMode(kLowPwrSBDonly))))
-        print("IsRunSeqListOneCommWinOnly: %s" % (bool(IsRunMode(kRunSeqListOneCommWin))))
-        print("IsIgnoringSDcard: %s" % (bool(IsRunMode(kIgnoreSDcard))))
-        print("IsCommPowerSimple: %s" % (bool(IsRunMode(kCommPowerSimple))))
+        print("IsSingleSeqMode: %s" % (bool(SnConfigFrame().IsRunMode(kSingleSeq))))
+        print("IsCountPowerReading: %s" % (bool(SnConfigFrame().IsRunMode(kCountPower))))
+        print("IsDualThresholdMode: %s" % (bool(SnConfigFrame().IsRunMode(kDualThresh))))
+        print("IsDifferentialTrigMode: %s" % (bool(SnConfigFrame().IsRunMode(kDiffTrig))))
+        print("IsSBDonlyLowPWRMode: %s" % (bool(SnConfigFrame().IsRunMode(kLowPwrSBDonly))))
+        print("IsRunSeqListOneCommWinOnly: %s" % (bool(SnConfigFrame().IsRunMode(kRunSeqListOneCommWin))))
+        print("IsIgnoringSDcard: %s" % (bool(SnConfigFrame().IsRunMode(kIgnoreSDcard))))
+        print("IsCommPowerSimple: %s" % (bool(SnConfigFrame().IsRunMode(kCommPowerSimple))))
         print("Executing OpenCommWin")
 
     # OPEN COMM WINDOW CODE HERE/ SPI CODE
