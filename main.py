@@ -262,7 +262,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         print("WaitTrigAndSendClock Executed")
         print("Wait Trig PW Status; ConfigByte: %s, Card: %s, Amps: %s, Irid: %s" %
               (SnConfigFrame().PowerMode(), GPIO.input(33), GPIO.input(36), GPIO.input(40)))
-        print("Are Cards Powered?: %s" % (AreCardsPowerd(False)))
+        print("Are Cards Powered?: %s" % (AreCardsPowered(False)))
 
     if AreCardsPowered(False):
         # Create SPI Link HERE
