@@ -278,9 +278,9 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
 
         # Wait for FPGA Data Ready Flag
         while(GPIO.input(7) == False):
-
             # Perform Priority Functions While Waiting
-            if gOpenCommWin or gCheckTemp:
+            #if gOpenCommWin or gCheckTemp:
+            if False:
                 print("Priority Function Flag Triggered")
                 print("gOpenCommWin: %s, gCheckTemp: %s" % (gOpenCommWin, gCheckTemp))
                 return
