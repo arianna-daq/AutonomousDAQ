@@ -3,8 +3,8 @@
 import numpy as np
 from smbus import SMBus
 import RPi.GPIO as GPIO
-import time
 
+from time import time
 from SnConstants import *
 from SnPreCompOptions import *
 from SnTempFrame import SnTempFrame, UpdateTemperature
@@ -16,30 +16,52 @@ from SnTempFrame import *
 bus = SMBus(1)            # I2C Pins 3, 5
 GPIO.setmode(GPIO.BOARD)  # Sets GPIO Function Input Format [Pin or GPIO]
 
+# Pin Shortcuts
+DataReady       = 7
+ResetChips      = 8
+ThermTrigEnable = 12
+ForcedTrig      = 13
+DiffSelect      = 15
+AndOrSelect     = 16
+HeartbeatTrig   = 22
+MajorLowBit     = 26
+MajorHighBit    = 29
+ReadOutSelect   = 31
+CardPower       = 33
+AmpPower        = 36
+IridPower       = 40
+
 # Input Pins
-GPIO.setup(7, GPIO.IN)  # Data Ready Flag
+GPIO.setup(DataReady, GPIO.IN)  # Data Ready Flag
 
 # Output Pins
-GPIO.setup(8, GPIO.OUT, initial=False)   # Reset Chips
-GPIO.setup(12, GPIO.OUT, initial=False)  # Enable Thermal Triggers
-GPIO.setup(13, GPIO.OUT, initial=False)  # Execute Forced Trigger
-GPIO.setup(15, GPIO.OUT, initial=True)   # FPGA Differential Select
-GPIO.setup(16, GPIO.OUT, initial=True)   # Dual Threshold Select !!!!!!!!!!!!!!!!!!!!!!!!!!
-GPIO.setup(26, GPIO.OUT, initial=False)  # Majority Logic Low Bit
-GPIO.setup(29, GPIO.OUT, initial=False)  # Majority Logic High Bit
-GPIO.setup(31, GPIO.OUT, initial=False)  # Reading Out Data Select
-GPIO.setup(33, GPIO.OUT, initial=False)  # Card/ Data Taking Power
-GPIO.setup(36, GPIO.OUT, initial=False)  # Amp Power
-GPIO.setup(40, GPIO.OUT, initial=False)  # Iridium Power
+GPIO.setup(ResetChips, GPIO.OUT, initial=False)       # Reset Chips
+GPIO.setup(ThermTrigEnable, GPIO.OUT, initial=False)  # Enable Thermal Triggers
+GPIO.setup(ForcedTrig, GPIO.OUT, initial=False)       # Execute Forced Trigger
+GPIO.setup(DiffSelect, GPIO.OUT, initial=True)        # FPGA Differential Select
+GPIO.setup(AndOrSelect, GPIO.OUT, initial=True)       # Dual Threshold Select
+GPIO.setup(HeartbeatTrig, GPIO.OUT, initial=False)    # Heartbeat Trigger
+GPIO.setup(MajorLowBit, GPIO.OUT, initial=False)      # Majority Logic Low Bit
+GPIO.setup(MajorHighBit, GPIO.OUT, initial=False)     # Majority Logic High Bit
+GPIO.setup(ReadOutSelect, GPIO.OUT, initial=False)    # Reading Out Data Select
+GPIO.setup(CardPower, GPIO.OUT, initial=False)        # Card/ Data Taking Power
+GPIO.setup(AmpPower, GPIO.OUT, initial=False)         # Amp Power
+GPIO.setup(IridPower, GPIO.OUT, initial=False)        # Iridium Power
 
 # USED PINS
+# GPIO.setup(18, GPIO.OUT)   # USUSED Pin
+# GPIO.setup(27, GPIO.OUT)   # USUSED Pin [NOT GPIO]
+# GPIO.setup(28, GPIO.OUT)   # USUSED Pin [NOT GPIO]
 # GPIO.setup(35, GPIO.IN)    # Power Probe 1 [UNUSED Pin]
 # GPIO.setup(37, GPIO.IN)    # Power Probe 2 [UNUSED Pin]
 # GPIO.setup(38, GPIO.OUT)   # UNUSED Pin
 
+# SBD Comms Pins 10, 11
+# SPI Pins 19, 21, 23, 24
 # Pin 32 Temp Probe [No IO Initialization Needed]
 # See README for More Details Regarding P32.
-# GND Pins 6, 9, 14, 20, 25, 30,34, 39
+# GND Pins 6, 9, 14, 20, 25, 30, 34, 39
+# VCC Related Pins 1, 2, 4, 17
 
 # Initialize Flag Variables
 ###########################
@@ -81,40 +103,40 @@ def SetPower(isCommWin): # MISSING WD
     iridToOn = SnConfigFrame().IsPoweredFor(iridpb)
 
     if not cardToOn:
-        GPIO.output(33, False)
+        GPIO.output(CardPower, False)
         if DEBUG:
             print("Powering Down Cards")
 
     if cardToOn:
-        GPIO.output(33, True)
+        GPIO.output(CardPower, True)
         if DEBUG:
             print("Powering Up Cards")
 
     if not ampsToOn:
-        GPIO.output(36, False)
+        GPIO.output(AmpPower, False)
         if DEBUG:
             print("Powering Down Amps")
 
     if ampsToOn:
-        GPIO.output(36, True)
+        GPIO.output(AmpPower, True)
         if DEBUG:
             print("Powering Up Amps")
 
     if not iridToOn:
-        GPIO.output(40, False)
+        GPIO.output(IridPower, False)
         if DEBUG:
             print("Powering Down Iridium")
 
     if iridToOn:
-        GPIO.output(40, True)
+        GPIO.output(IridPower, True)
         if DEBUG:
             print("Powering Up Iridium")
 
     # WAIT STATEMENT
     if DEBUG:
         print("Power Set; CommWin?: %s, ConfigByte: %s, Card: %s, Amps: %s, Irid: %s" %
-              (bool(isCommWin), SnConfigFrame().PowerMode(), GPIO.input(33),
-               GPIO.input(36), GPIO.input(40)))
+              (bool(isCommWin), SnConfigFrame().PowerMode(), GPIO.input(CardPower),
+               GPIO.input(AmpPower), GPIO.input(IridPower)))
 
 
 def AreCardsPowered(checkPin):
@@ -129,7 +151,7 @@ def AreCardsPowered(checkPin):
 
     # Take New Measurement of P33
     if checkPin:
-        gCardsPowered = (GPIO.input(33))
+        gCardsPowered = (GPIO.input(CardPower))
 
     if DEBUG:
         print("RETURN: Cards Powered?  %s" % (gCardsPowered))
@@ -184,8 +206,8 @@ def SetSstDACs(bus):
                 LSB = (dv & 255)
 
                 if DEBUG:
-                    print("MSB:%s" % format(MSB, '08b'))
-                    print("LSB:%s" % format(LSB, '08b'))
+                    print("MSB: %s" % format(MSB, '08b'))
+                    print("LSB: %s" % format(LSB, '08b'))
 
                 # Try Send Data Bitstream to DAC Chip via I2C
                 # If Error is Raised then Try Again
@@ -203,8 +225,8 @@ def LoadSetDEFCONF():
     """   """
 
     # Block Triggers during Configuration
-    GPIO.output(12, False) # Thermal Trigger
-    GPIO.output(13, False) # Force Trigger
+    GPIO.output(ThermTrigEnable, False) # Thermal Trigger
+    GPIO.output(ForcedTrig, False)      # Force Trigger
     # HB set 0
 
     LoadDEFCONF()
@@ -213,8 +235,8 @@ def LoadSetDEFCONF():
 
     if AreCardsPowered(True):
         # Set Highest Maj Logic During Configuration
-        GPIO.output(26, True) # MajLog Low Bit
-        GPIO.output(29, True) # MajLog High Bit
+        GPIO.output(MajorLowBit, True)  # MajLog Low Bit
+        GPIO.output(MajorHighBit, True) # MajLog High Bit
 
         # I2C Set SST Thresholds
         SetSstDACs(bus)
@@ -226,18 +248,18 @@ def LoadSetDEFCONF():
             print("Cards OFF, Skipping DAC Set")
 
     # Set Pins to Config Settings
-    GPIO.output(12, bool(SnConfigFrame().EnableThermTrig()))
-    GPIO.output(15, bool(SnConfigFrame().IsRunMode(kDiffTrig)))
-    GPIO.output(16, bool(SnConfigFrame().IsRunMode(kDualThresh)))
+    GPIO.output(ThermTrigEnable, bool(SnConfigFrame().EnableThermTrig()))
+    GPIO.output(DiffSelect, bool(SnConfigFrame().IsRunMode(kDiffTrig)))
+    GPIO.output(AndOrSelect, bool(SnConfigFrame().IsRunMode(kDualThresh)))
 
     HighBit, LowBit = SnConfigFrame().GetMajLog()
-    GPIO.output(26, LowBit)   # MajLog Low Bit
-    GPIO.output(29, HighBit)  # MajLog High Bit
+    GPIO.output(MajorLowBit, LowBit)    # MajLog Low Bit
+    GPIO.output(MajorHighBit, HighBit)  # MajLog High Bit
 
     if DEBUG:
-        print("EnableThermTrig: %s" % (bool(GPIO.input(12))))
-        print("DiffTrig: %s" % (bool(GPIO.input(15))))
-        print("DualThreshold: %s" % (bool(GPIO.input(16))))
+        print("EnableThermTrig: %s" % (bool(GPIO.input(ThermTrigEnable))))
+        print("DiffTrig: %s" % (bool(GPIO.input(DiffSelect))))
+        print("DualThreshold: %s" % (bool(GPIO.input(AndOrSelect))))
         print("Majority Logic: %s" % (SnConfigFrame().ConfigFrame['fNumCardsMajLog']))
         print("MajLog LowBit: %s, HighBit: %s" % (LowBit, HighBit))
 
@@ -261,7 +283,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
     if DEBUG:
         print("WaitTrigAndSendClock Executed")
         print("Wait Trig PW Status; ConfigByte: %s, Card: %s, Amps: %s, Irid: %s" %
-              (SnConfigFrame().PowerMode(), GPIO.input(33), GPIO.input(36), GPIO.input(40)))
+              (SnConfigFrame().PowerMode(), GPIO.input(CardPower), GPIO.input(AmpPower), GPIO.input(IridPower)))
         print("Are Cards Powered?: %s" % (AreCardsPowered(False)))
 
     if AreCardsPowered(False):
@@ -277,7 +299,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gReadingOut = False
 
         # Wait for FPGA Data Ready Flag
-        while(GPIO.input(7) == False):
+        while(GPIO.input(DataReady) == False):
 
             # Perform Priority Functions While Waiting
             if gOpenCommWin or gCheckTemp:
@@ -286,7 +308,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
                 return
 
         if DEBUG:
-            print("FPGA Data Ready Flag [P7] Triggered: P7 %s" % (bool(GPIO.input(7))))
+            print("FPGA Data Ready Flag [P7] Triggered: P7 %s" % (bool(GPIO.input(DataReady))))
 
         # Data is Ready
         gReadingOut = True
@@ -303,7 +325,7 @@ if __name__=="__main__":
         print("System Starting...")
         #print("Local Time: %s" % (time.localtime()))
         print("Startup Power; Card: %s, Amps: %s, Irid: %s" %
-              (bool(GPIO.input(33)), bool(GPIO.input(36)), bool(GPIO.input(40))))
+              (bool(GPIO.input(CardPower)), bool(GPIO.input(AmpPower)), bool(GPIO.input(IridPower))))
 
     # WatchDog Reset, Comms Settings, MAC Addr, Timing Settings, Tickers and Clocks
 
@@ -355,8 +377,8 @@ if __name__=="__main__":
                     print("First Event Trigger Start Reset.")
 
                 # Reset Chips
-                GPIO.output(8, True)
-                GPIO.output(8, False)
+                GPIO.output(ResetChips, True)
+                GPIO.output(ResetChips, False)
 
             else:
                 if DEBUG:
@@ -364,7 +386,7 @@ if __name__=="__main__":
                     print("First Event Trigger Start Reset. [SKIPPED]")
 
         # Wait for Trigger
-        GPIO.output(31, False)
+        GPIO.output(ReadOutSelect, False)
         WaitTrigAndSendClock()
 
 
