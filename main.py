@@ -3,6 +3,7 @@
 import numpy as np
 from smbus import SMBus
 import RPi.GPIO as GPIO
+import spidev
 
 from time import time
 from SnConstants import *
@@ -15,6 +16,9 @@ from SnTempFrame import *
 ###############################
 bus = SMBus(1)            # I2C Pins 3, 5
 GPIO.setmode(GPIO.BOARD)  # Sets GPIO Function Input Format [Pin or GPIO]
+
+spi = spidev.SpiDev(0, 0)   # Uses /dev/spidev0.0 [SPI Pins 19, 21, 23, 24]
+spi.max_speed_hz = 10000000 # Set Max SPI Speed [Max Limit: 32MHz]
 
 # Pin Shortcuts
 DataReady       = 7
@@ -57,7 +61,6 @@ GPIO.setup(IridPower, GPIO.OUT, initial=False)        # Iridium Power
 # GPIO.setup(38, GPIO.OUT)   # UNUSED Pin
 
 # SBD Comms Pins 10, 11
-# SPI Pins 19, 21, 23, 24
 # Pin 32 Temp Probe [No IO Initialization Needed]
 # See README for More Details Regarding P32.
 # GND Pins 6, 9, 14, 20, 25, 30, 34, 39
@@ -388,6 +391,27 @@ if __name__=="__main__":
         # Wait for Trigger
         GPIO.output(ReadOutSelect, False)
         WaitTrigAndSendClock()
+
+        test = False # TESTING PURPOSES
+
+        if gReadingOut:
+            if test:
+                saved = SaveEvent() 
+            else:
+                # Got a Trigger, but DO NOT SAVE EVENT.
+
+                if DEBUG:
+                    print(">>>>>>> THROW EVENT AWAY!")
+                # printf(" forced=%s, first=%s, "
+                #     "etms=%g, throttle=%hu, etms>=thr=%s\r\n",
+                #     (gForcedTrig ? "true" : "false"),
+                #     (gFirstEvt ? "true" : "false"),
+                #     etms, gConf.GetEvtThrtlPeriodMs(),
+                #     (etms>=gConf.GetEvtThrtlPeriodMs() ? "true" : "false"));
+
+                # Reset Chips
+                GPIO.output(ResetChips, True)
+                GPIO.output(ResetChips, False)
 
 
 
