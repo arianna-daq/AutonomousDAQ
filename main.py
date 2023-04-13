@@ -319,6 +319,9 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gReadingOut = False
         gFirstEvt   = False
 
+def SaveEvent(ETms):
+    
+
 ########################################################################
 #                              MAIN CODE                               #
 ########################################################################
@@ -396,7 +399,7 @@ if __name__=="__main__":
 
         if gReadingOut:
             if test:
-                saved = SaveEvent() 
+                saved = SaveEvent(ETms) 
             else:
                 # Got a Trigger, but DO NOT SAVE EVENT.
 
