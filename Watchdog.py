@@ -6,7 +6,7 @@ class Watchdog:
         self.period = WD_period
         self.WD_timer = Timer(self.period, self.RESET_RPi)
 
-        temp = open("WD.dat", 'r')
+        temp = open("WD.dat", 'r+')
         self.Prev_reset = temp.read(1)
         temp.seek(0)
         temp.write("0")
@@ -17,7 +17,7 @@ class Watchdog:
         temp.write("1")
         temp.close()
 
-        os.system('sudo shutdown -r now')
+        os.system('sudo reboot')
 
     def kick(self):
         self.WD_timer.cancel()
