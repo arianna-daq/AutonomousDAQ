@@ -23,7 +23,7 @@ class Watchdog:
         os.system('sudo reboot')
 
     def kick(self, *args):
-        if len(args) = 1:
+        if args:
             self.period = args[0]
             self.WD_timer.cancel()
             self.WD_timer = Timer(self.period, self.RESET)
@@ -34,12 +34,12 @@ class Watchdog:
     def didWatchdogReset(self):
         return int(self.Prev_reset)
     
-    def ReturnValues():
-        return self.period
+    def _str_(self):
+        return "Perod: %s" % (self.period)
 
         
 if __name__=="__main__":
     WD = Watchdog()
     WD.Starter(WDFAILSAFE)
-    print(WD.ReturnValues())
+    print(WD)
 
