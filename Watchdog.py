@@ -35,7 +35,7 @@ class Watchdog:
         return int(self.PrevReset)
     
     def __str__(self):
-        return self.WDPeriod
+        return "%s" % (self.WDPeriod)
 
         
 if __name__=="__main__":
