@@ -465,7 +465,6 @@ if __name__=="__main__":
         if gReadingOut:
 
         # Timer and Ticker settings
-
         WD.kick()   # Don't Reset!
 
         if not gForcedTrig:
