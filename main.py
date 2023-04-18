@@ -139,7 +139,6 @@ def procTempCheck():
 
     gCheckTemp = True
 
-
 def SetPower(isCommWin): # MISSING WD
     global CardPower, AmpPower, IridPower
 
@@ -201,7 +200,6 @@ def SetPower(isCommWin): # MISSING WD
         print("Power Set; CommWin?: %s, ConfigByte: %s, Card: %s, Amps: %s, Irid: %s" %
               (bool(isCommWin), SnConfigFrame().PowerMode(), GPIO.input(CardPower),
                GPIO.input(AmpPower), GPIO.input(IridPower)))
-
 
 def AreCardsPowered(checkPin):
     """Checks P33 Status. P33 [Output] Enables Power to Cards. If checkPin is True,
@@ -284,7 +282,6 @@ def SetSstDACs(bus):
             if DEBUG:
                 print("Channel %d: Transmitted? %s " % (ch, dok))
 
-
 def LoadSetDEFCONF():
     global ThermTrigEnable, ForcedTrig, MajorHighBit, MajorLowBit
     global DiffSelect, AndOrSelect
@@ -335,8 +332,6 @@ def LoadSetDEFCONF():
 
     if DEBUG:
         print("Configuration Complete.")
-
-
 
 def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
     """Secondary Loop under Main Loop. Waits for Trigger [P7] or Flags to
@@ -427,6 +422,7 @@ if __name__=="__main__":
 
     while(True):
         if DEBUG:
+            print("##############################################################")
             print("Starting Main Loop...")
 
         # RESET WATCHDOG HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -440,26 +436,15 @@ if __name__=="__main__":
 
             if not (SnConfigFrame().ConfigFrame['fRunMode'] & kSkipTrgStartReset):
                 if DEBUG:
-                    print("----------------------------------------------------")
                     print("First Event Trigger Start Reset.")
 
                 # Reset Chips
-                if DEBUG:
-                    print("Reset Chips; Before Reset: %s" % (bool(GPIO.input(ResetChips))))
-
                 GPIO.output(ResetChips, True)
-
-                if DEBUG:
-                    print("Reset Chips; True? Reset: %s" % (bool(GPIO.input(ResetChips))))
-                
                 GPIO.output(ResetChips, False)
 
-                if DEBUG:
-                    print("Reset Chips; After Reset: %s" % (bool(GPIO.input(ResetChips))))
 
             else:
                 if DEBUG:
-                    print("----------------------------------------------------")
                     print("First Event Trigger Start Reset. [SKIPPED]")
 
         # Wait for Trigger
@@ -484,18 +469,8 @@ if __name__=="__main__":
                 #     (etms>=gConf.GetEvtThrtlPeriodMs() ? "true" : "false"));
 
                 # Reset Chips
-                if DEBUG:
-                    print("Reset Chips; Before Reset: %s" % (bool(GPIO.input(ResetChips))))
-
                 GPIO.output(ResetChips, True)
-
-                if DEBUG:
-                    print("Reset Chips; True? Reset: %s" % (bool(GPIO.input(ResetChips))))
-                
                 GPIO.output(ResetChips, False)
-
-                if DEBUG:
-                    print("Reset Chips; After Reset: %s" % (bool(GPIO.input(ResetChips))))
 
 
 
