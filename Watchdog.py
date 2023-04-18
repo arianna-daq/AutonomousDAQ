@@ -27,9 +27,11 @@ class Watchdog:
             self.WDPeriod = args[0]
             self.WD_timer.cancel()
             self.WD_timer = Timer(self.WDPeriod, self.RESET)
+            self.WD_timer.start()
         else:
             self.WD_timer.cancel()
             self.WD_timer = Timer(self.WDPeriod, self.RESET)
+            self.WD_timer.start()
 
     def didWatchdogReset(self):
         return int(self.PrevReset)
