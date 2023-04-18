@@ -76,7 +76,7 @@ GPIO.setup(IridPower, GPIO.OUT, initial=False)        # Iridium Power
 
 # Initialize Global Variables
 ###########################
-gForceticker,    = False     # Force Trigger Ticker
+gForceticker     = None     # Force Trigger Ticker
 gHeartbeatTicker = None     # Heartbeat Trigger Ticker
 gTempCheckTicker = None     # Check Temperature Ticker
 gCommWinTicker   = None     # Communication Window Ticker
