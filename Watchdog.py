@@ -2,7 +2,7 @@ import os
 from threading import Timer
 
 class Watchdog:
-    def __init__(self, WD_period):
+    def Starter(self, WD_period):
         self.period = WD_period
         self.WD_timer = Timer(self.period, self.RESET_RPi)
 
