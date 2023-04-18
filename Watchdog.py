@@ -23,7 +23,7 @@ class Watchdog:
         os.system('sudo reboot')
 
     def kick(self, *args):
-        if args = 1:
+        if len(args) = 1:
             self.period = args[0]
             self.WD_timer.cancel()
             self.WD_timer = Timer(self.period, self.RESET)
