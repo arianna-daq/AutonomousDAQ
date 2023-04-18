@@ -143,6 +143,13 @@ class SnConfigFrame:
     def GetMajLog(self):
         ML = format(SnConfigFrame().ConfigFrame['fNumCardsMajLog'], '02b')
         return bool(ML[1]), bool(ML[0])
+    
+    def GetWatchdogPeriod(self):
+        return SnConfigFrame().ConfigFrame['WatchdogPeriod']
+    
+    def GetThrottlePeriodms(self):
+        return SnConfigFrame().ConfigFrame['fThrottlePeriod']
+
 
 
 def checkDEFCONF(infn):

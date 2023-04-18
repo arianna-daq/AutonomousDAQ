@@ -15,8 +15,8 @@ from threading import Timer
 # Get Start Up Time
 gPowerOnTime = time()
 
-# Start Watchdog Immediately
-Watchdog().Starter(WDFAILSAFE)
+# Start Watchdog Immediately [Use WDFAILSAFE During Configuration]
+WD = Watchdog(WDFAILSAFE)
 
 # MAC ADDRESS GOES HERE
 
@@ -376,7 +376,12 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gReadingOut = False
         gFirstEvt   = False
 
-#def SaveEvent(ETms):
+def SaveEvent(ETms):
+    # Reset Chips
+    GPIO.output(ResetChips, True)
+    GPIO.output(ResetChips, False)
+
+    return False
 
 ########################################################################
 #                              MAIN CODE                               #
@@ -389,14 +394,18 @@ if __name__=="__main__":
         print("Startup Power; Card: %s, Amps: %s, Irid: %s" %
               (bool(GPIO.input(CardPower)), bool(GPIO.input(AmpPower)), bool(GPIO.input(IridPower))))
 
-    # WatchDog Reset, Comms Settings, MAC Addr, Timing Settings, Tickers and Clocks
-
     # Load & Set Board Configurations
     LoadSetDEFCONF()
 
-
     if DEBUG:
         print("Configuration File Loaded.")
+
+    # Comms Settings, MAC Addr, Timing Settings, Tickers and Clocks
+
+    if DEBUG:
+        print("Restart Watchdog at [%s] with Period [%s]" % (time(), SnConfigFrame().GetWatchdogPeriod()))
+    
+    WD.kick(SnConfigFrame().GetWatchdogPeriod())
 
     # Turn Off Comms, Turn On Cards/ Amps (Based on Config)
     SetPower(False)
@@ -419,13 +428,13 @@ if __name__=="__main__":
     # Time Between events, Zerod.
     ETms = 0
 
-
     while(True):
+        
+        WD.kick()   # Don't Reset!
+
         if DEBUG:
             print("##############################################################")
             print("Starting Main Loop...")
-
-        # RESET WATCHDOG HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         if DEBUG:
             print("gFirstEvt = %s" % (gFirstEvt))
@@ -434,7 +443,7 @@ if __name__=="__main__":
         if gFirstEvt:
             # TIMER RESET HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            if not (SnConfigFrame().ConfigFrame['fRunMode'] & kSkipTrgStartReset):
+            if not bool(SnConfigFrame().IsRunMode(kSkipTrgStartReset)):
                 if DEBUG:
                     print("First Event Trigger Start Reset.")
 
@@ -454,23 +463,32 @@ if __name__=="__main__":
         test = False # TESTING PURPOSES
 
         if gReadingOut:
-            if test:
-                saved = SaveEvent(ETms) 
-            else:
-                # Got a Trigger, but DO NOT SAVE EVENT.
 
-                if DEBUG:
-                    print(">>>>>>> THROW EVENT AWAY!")
-                # printf(" forced=%s, first=%s, "
-                #     "etms=%g, throttle=%hu, etms>=thr=%s\r\n",
-                #     (gForcedTrig ? "true" : "false"),
-                #     (gFirstEvt ? "true" : "false"),
-                #     etms, gConf.GetEvtThrtlPeriodMs(),
-                #     (etms>=gConf.GetEvtThrtlPeriodMs() ? "true" : "false"));
+        # Timer and Ticker settings
 
-                # Reset Chips
-                GPIO.output(ResetChips, True)
-                GPIO.output(ResetChips, False)
+        WD.kick()   # Don't Reset!
+
+        if not gForcedTrig:
+            gNumThmTrigs += 1
+
+        if gForcedTrig or gFirstEvt or (ETms >= SnConfigFrame().GetThrottlePeriodms()):
+        
+            saved = SaveEvent(ETms) 
+            if saved:
+                gNumSavedEvts += 1
+                ETms = 0
+        
+        else:
+            # Got a Trigger, but DO NOT SAVE EVENT.
+            if DEBUG:
+                print(">>>>>>> THROW EVENT AWAY!")
+                print("Forced?: %s, First?: %s, ETms = %s, Throttlems = %s, (ETms >= Throttle)?: %s" % 
+                      (gForcedTrig, gFirstEvt, ETms, SnConfigFrame().GetThrottlePeriodms(), 
+                       (ETms >= SnConfigFrame().GetThrottlePeriodms())))
+
+            # Reset Chips
+            GPIO.output(ResetChips, True)
+            GPIO.output(ResetChips, False)
 
 
 
