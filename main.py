@@ -463,31 +463,30 @@ if __name__=="__main__":
         test = False # TESTING PURPOSES
 
         if gReadingOut:
+            # Timers and Tickers 
+            WD.kick()   # Don't Reset!
 
-        # Timer and Ticker settings
-        WD.kick()   # Don't Reset!
+            if not gForcedTrig:
+                gNumThmTrigs += 1
 
-        if not gForcedTrig:
-            gNumThmTrigs += 1
+            if gForcedTrig or gFirstEvt or (ETms >= SnConfigFrame().GetThrottlePeriodms()):
+            
+                saved = SaveEvent(ETms) 
+                if saved:
+                    gNumSavedEvts += 1
+                    ETms = 0
+            
+            else:
+                # Got a Trigger, but DO NOT SAVE EVENT.
+                if DEBUG:
+                    print(">>>>>>> THROW EVENT AWAY!")
+                    print("Forced?: %s, First?: %s, ETms = %s, Throttlems = %s, (ETms >= Throttle)?: %s" % 
+                        (gForcedTrig, gFirstEvt, ETms, SnConfigFrame().GetThrottlePeriodms(), 
+                        (ETms >= SnConfigFrame().GetThrottlePeriodms())))
 
-        if gForcedTrig or gFirstEvt or (ETms >= SnConfigFrame().GetThrottlePeriodms()):
-        
-            saved = SaveEvent(ETms) 
-            if saved:
-                gNumSavedEvts += 1
-                ETms = 0
-        
-        else:
-            # Got a Trigger, but DO NOT SAVE EVENT.
-            if DEBUG:
-                print(">>>>>>> THROW EVENT AWAY!")
-                print("Forced?: %s, First?: %s, ETms = %s, Throttlems = %s, (ETms >= Throttle)?: %s" % 
-                      (gForcedTrig, gFirstEvt, ETms, SnConfigFrame().GetThrottlePeriodms(), 
-                       (ETms >= SnConfigFrame().GetThrottlePeriodms())))
-
-            # Reset Chips
-            GPIO.output(ResetChips, True)
-            GPIO.output(ResetChips, False)
+                # Reset Chips
+                GPIO.output(ResetChips, True)
+                GPIO.output(ResetChips, False)
 
 
 
