@@ -24,6 +24,7 @@ WD = Watchdog(WDFAILSAFE)
 ###############################
 bus = SMBus(1)            # I2C Pins 3, 5
 GPIO.setmode(GPIO.BOARD)  # Sets GPIO Function Input Format [Pin or GPIO]
+GPIO.setwarnings(False)   # Turn Off Warnings About GPIO Pins
 
 spi = spidev.SpiDev(0, 0)   # Uses /dev/spidev0.0 [SPI Pins 19, 21, 23, 24]
 spi.max_speed_hz = 10000000 # Set Max SPI Speed [Max Limit: 32MHz]
@@ -377,11 +378,17 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gFirstEvt   = False
 
 def SaveEvent(ETms):
+    global WD
+
+    didSave = False
+
     # Reset Chips
     GPIO.output(ResetChips, True)
     GPIO.output(ResetChips, False)
 
-    return False
+    WD.kick()
+
+    return didSave
 
 ########################################################################
 #                              MAIN CODE                               #
@@ -487,6 +494,11 @@ if __name__=="__main__":
                 # Reset Chips
                 GPIO.output(ResetChips, True)
                 GPIO.output(ResetChips, False)
+
+            gForcedTrig = False
+
+            if DEBUG:
+                print("Past Reading Out.")
 
 
 
