@@ -444,8 +444,18 @@ if __name__=="__main__":
                     print("First Event Trigger Start Reset.")
 
                 # Reset Chips
+                if DEBUG:
+                    print("Reset Chips; Before Reset: %s" % (bool(GPIO.input(ResetChips))))
+
                 GPIO.output(ResetChips, True)
+
+                if DEBUG:
+                    print("Reset Chips; True? Reset: %s" % (bool(GPIO.input(ResetChips))))
+                
                 GPIO.output(ResetChips, False)
+
+                if DEBUG:
+                    print("Reset Chips; After Reset: %s" % (bool(GPIO.input(ResetChips))))
 
             else:
                 if DEBUG:
@@ -474,8 +484,18 @@ if __name__=="__main__":
                 #     (etms>=gConf.GetEvtThrtlPeriodMs() ? "true" : "false"));
 
                 # Reset Chips
+                if DEBUG:
+                    print("Reset Chips; Before Reset: %s" % (bool(GPIO.input(ResetChips))))
+
                 GPIO.output(ResetChips, True)
+
+                if DEBUG:
+                    print("Reset Chips; True? Reset: %s" % (bool(GPIO.input(ResetChips))))
+                
                 GPIO.output(ResetChips, False)
+
+                if DEBUG:
+                    print("Reset Chips; After Reset: %s" % (bool(GPIO.input(ResetChips))))
 
 
 
