@@ -31,6 +31,7 @@ kDefTimeoutMin       = 1         # [minutes] Used in Case min range needs enforc
 kDefTimeoutSafe      = 3         # [minutes] Used in Case a Clock Error or max range needs enforcing
 kCommWinLongPrdTk    = 300       # [seconds] Check if it's Time for a CommWin every X seconds
 kMaxConsecCommFails  = 75        # Number of Times a CommWin can Fail before RPi Resets
+WDFAILSAFE           = 1200      # Default Watchdog Value during Configuration    
 
 # Safety Nets
 kMaxFirstSeq             = 25000     # Max Sequence Number

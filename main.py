@@ -1,8 +1,5 @@
 # python main.py
 from time import time
-
-gPowerOnTime = time()
-
 import numpy as np
 from smbus import SMBus
 import RPi.GPIO as GPIO
@@ -12,6 +9,16 @@ from SnPreCompOptions import *
 from SnTempFrame import SnTempFrame, UpdateTemperature
 from SnConfigFrame import SnConfigFrame, LoadDEFCONF
 from SnTempFrame import *
+from Watchdog import Watchdog
+from threading import Timer
+
+# Get Start Up Time
+gPowerOnTime = time()
+
+# Start Watchdog Immediately
+Watchdog().Starter(WDFAILSAFE)
+
+# MAC ADDRESS GOES HERE
 
 # Initialize and Assign IO pins
 ###############################
@@ -67,21 +74,74 @@ GPIO.setup(IridPower, GPIO.OUT, initial=False)        # Iridium Power
 # GND Pins 6, 9, 14, 20, 25, 30, 34, 39
 # VCC Related Pins 1, 2, 4, 17
 
-# Initialize Flag Variables
+# Initialize Global Variables
 ###########################
-gFirstEvt     = True     # First Event of Sequence
-gReadingOut   = False    # Readout Data from FPGA
-gOpenCommWin  = False    # Open Comm Window
-gCheckTemp    = False    # Check Temperature
-gCardsPowered = False    # Cards Powered On
+gForceticker,    = None     # Force Trigger Ticker
+gHeartbeatTicker = None     # Heartbeat Trigger Ticker
+gTempCheckTicker = None     # Check Temperature Ticker
+gCommWinTicker   = None     # Communication Window Ticker
+gAllTrgTimer     = None     # Time between Triggers
+gTrgLiveTimer    = None     # Elasped Time since Seqence Started
+
+gFirstEvt     = True     # First Event of Sequence?
+gReadingOut   = False    # Readed Data from FPGA?
+gOpenCommWin  = False    # Open Comm Window?
+gCommWinOpen  = False    # Is Comm Window Open?
+gCheckTemp    = False    # Check Temperature?
+gCardsPowered = False    # Cards Powered On?
+gForcedTrig   = False    # Force Trigger Bit Flip?
+gHrtbtFired   = False    # Heartbeat Sent?
+
+gEvtNum           = 0   # Number of Events Written
+gNumThmTrigs      = 0   # Number of Thermal Triggers
+gNumFrcTrig       = 0   # Number of Forced Triggers
+gNumSavedEvts     = 0   # Number of Saved Events; (Differs from gEvtNum)
+gL1ScaledownCount = 0   # Write an Event every X L1 fails
+gLastHrtbt        = 0   # Last Heartbeat Time
+gHrtbtNum         = 0   # Number of Heartbeat Triggers
+
 
 # Essential Functions
 #####################
+def procForceTrigger():
+    global gReadingOut, gCommWinOpen, gForcedTrig, gNumFrcTrig
+    global CardPower, DataReady, ForcedTrig
 
+    if not gReadingOut and not gCommWinOpen:
+        if DEBUG:
+            print("Processing Force Trigger")
+            print("Force Trig Pin: %s, Cards Powered?: %s, Data Ready?: %s" % 
+                  (GPIO.input(ForcedTrig), GPIO.input(CardPower), GPIO.input(DataReady))) 
+            
+        gForcedTrig = True
+        gNumFrcTrig += 1
+
+        GPIO.output(ForcedTrig, True)
+        GPIO.output(ForcedTrig, False)
+
+def procHeartbeat():
+    global gReadingOut, gCommWinOpen, HeartbeatTrig
+    global gLastHrtbt, gHrtbtFired, gHrtbtNum
+
+    if not gReadingOut and not gCommWinOpen:
+        if DEBUG:
+            print("Processing Heartbeat Trigger")
+        
+        GPIO.output(HeartbeatTrig, True)
+        GPIO.output(HeartbeatTrig, False)
+
+        gLastHrtbt = time()
+        gHrtbtFired = True
+        gHrtbtNum += 1
+
+def procTempCheck():
+    global gCheckTemp
+
+    gCheckTemp = True
 
 
 def SetPower(isCommWin): # MISSING WD
-    """   """
+    global CardPower, AmpPower, IridPower
 
     if DEBUG:
         print("Set Power Executed: isCommWin? %s" % (isCommWin))
@@ -147,7 +207,7 @@ def AreCardsPowered(checkPin):
     """Checks P33 Status. P33 [Output] Enables Power to Cards. If checkPin is True,
     Update gCardsPowered. If False, Use Old Value/ No Update."""
 
-    global gCardsPowered
+    global gCardsPowered, CardPower
 
     if DEBUG:
         print("Executing ArCardsPowered?")
@@ -226,7 +286,8 @@ def SetSstDACs(bus):
 
 
 def LoadSetDEFCONF():
-    """   """
+    global ThermTrigEnable, ForcedTrig, MajorHighBit, MajorLowBit
+    global DiffSelect, AndOrSelect
 
     # Block Triggers during Configuration
     GPIO.output(ThermTrigEnable, False) # Thermal Trigger
@@ -282,7 +343,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
     Initiate Next Process. Flags Indicate Priority Functions Open Comms Window
     [gOpenCommWin] and Check Temperature [gCheckTemp]."""
 
-    global gFirstEvt, gReadingOut, gOpenCommWin
+    global gFirstEvt, gReadingOut, gOpenCommWin, DataReady
 
     if DEBUG:
         print("WaitTrigAndSendClock Executed")
