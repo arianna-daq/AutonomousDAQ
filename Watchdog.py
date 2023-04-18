@@ -3,16 +3,19 @@ import os
 from SnConstants import *
 
 class Watchdog:
+    WDPeriod  = None
+    PrevReset = None
+
     def Starter(self, WD_period):
-        self.period = WD_period
+        Watchdog().WDPeriod = WD_period
 
         temp = open("WD.dat", 'r+')
-        self.Prev_reset = temp.read(1)
+        Watchdog().PrevReset = temp.read(1)
         temp.seek(0)
         temp.write("0")
         temp.close()
 
-        self.WD_timer = Timer(self.period, self.RESET)
+        self.WD_timer = Timer(Watchdog().WDPeriod, self.RESET)
         self.WD_timer.start()        
 
     def RESET(self):
@@ -24,22 +27,21 @@ class Watchdog:
 
     def kick(self, *args):
         if args:
-            self.period = args[0]
+            Watchdog().WDPeriod = args[0]
             self.WD_timer.cancel()
-            self.WD_timer = Timer(self.period, self.RESET)
+            self.WD_timer = Timer(Watchdog().WDPeriod, self.RESET)
         else:
             self.WD_timer.cancel()
-            self.WD_timer = Timer(self.period, self.RESET)
+            self.WD_timer = Timer(Watchdog().WDPeriod, self.RESET)
 
     def didWatchdogReset(self):
-        return int(self.Prev_reset)
+        return int(Watchdog().PrevReset)
     
-    def _str_(self):
-        return "Perod: %s" % (self.period)
+    def values(self):
+        return Watchdog().WDPeriod
 
         
 if __name__=="__main__":
-    WD = Watchdog()
-    WD.Starter(WDFAILSAFE)
-    print(WD)
+    Watchdog().Starter(WDFAILSAFE)
+    print(Watchdog())
 
