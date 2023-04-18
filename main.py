@@ -1,11 +1,12 @@
 # python main.py
+from time import time
+
+gPowerOnTime = time()
 
 import numpy as np
 from smbus import SMBus
 import RPi.GPIO as GPIO
 import spidev
-
-from time import time
 from SnConstants import *
 from SnPreCompOptions import *
 from SnTempFrame import SnTempFrame, UpdateTemperature
