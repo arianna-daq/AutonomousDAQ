@@ -22,7 +22,7 @@ def ClearEvent(clearTrigs, clearWaveData):
 
     if clearWaveData:
         SnEventFrame().fData = np.empty(kTotSamps)
-        SnEventFrame().fStop = np.empty(kNstopBytes)
+        SnEventFrame().fStop = np.empty(int(kNstopBytes))
         snEventFrame().fCRC  = 0
 
     if clearTrigs:
