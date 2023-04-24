@@ -11,6 +11,7 @@ from SnConfigFrame import SnConfigFrame, LoadDEFCONF
 from SnTempFrame import *
 from Watchdog import Watchdog
 from threading import Timer
+from SnEventFrame import SnEventFrame, ReadWaveformsSST, ClearEvent, BytesToHex
 
 # Get Start Up Time
 gPowerOnTime = time()
@@ -26,8 +27,9 @@ bus = SMBus(1)            # I2C Pins 3, 5
 GPIO.setmode(GPIO.BOARD)  # Sets GPIO Function Input Format [Pin or GPIO]
 GPIO.setwarnings(False)   # Turn Off Warnings About GPIO Pins
 
-spi = spidev.SpiDev(0, 0)   # Uses /dev/spidev0.0 [SPI Pins 19, 21, 23, 24]
+spi = spidev())  # Uses /dev/spidev0.0 [SPI Pins 19, 21, 23, 24]
 spi.max_speed_hz = 10000000 # Set Max SPI Speed [Max Limit: 32MHz]
+spi.mode(1)
 
 # Pin Shortcuts
 DataReady       = 7
@@ -382,6 +384,11 @@ def SaveEvent(ETms):
 
     didSave = False
 
+    ClearEvent(True, True)
+    b = ReadWaveformsSST()
+    BytesToHex(b)
+
+
     # Reset Chips
     GPIO.output(ResetChips, True)
     GPIO.output(ResetChips, False)
@@ -390,9 +397,20 @@ def SaveEvent(ETms):
 
     return didSave
 
-########################################################################
-#                              MAIN CODE                               #
-########################################################################
+
+
+
+
+
+##########################################################################
+###                                                                    ###
+###        __  __          _             ___            _              ###
+###       |  \/  |  __ _  (_)  _ _      / __|  ___   __| |  ___        ###
+###       | |\/| | / _` | | | | ' \    | (__  / _ \ / _` | / -_)       ###
+###       |_|  |_| \__,_| |_| |_||_|    \___| \___/ \__,_| \___|       ###
+###                                                                    ###
+###                                                                    ###
+##########################################################################
 
 if __name__=="__main__":
     if DEBUG:
