@@ -8,8 +8,8 @@ DEBUG_SEF = False
 ReadOutSelect   = 31
 
 class SnEventFrame:
-    fData     = np.empty(kTotSamps)
-    fStop     = np.empty(kNstopBytes)
+    fData     = np.empty([kTotSamps])
+    fStop     = np.empty([kNstopBytes])
     fMbedTime = None
     fEvtNum   = None
     fDTms     = None
@@ -22,7 +22,7 @@ def ClearEvent(clearTrigs, clearWaveData):
 
     if clearWaveData:
         SnEventFrame().fData = np.empty(kTotSamps)
-        SnEventFrame().fStop = np.empty(int(kNstopBytes))
+        SnEventFrame().fStop = np.empty(kNstopBytes)
         snEventFrame().fCRC  = 0
 
     if clearTrigs:
