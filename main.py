@@ -27,7 +27,7 @@ bus = SMBus(1)            # I2C Pins 3, 5
 GPIO.setmode(GPIO.BOARD)  # Sets GPIO Function Input Format [Pin or GPIO]
 GPIO.setwarnings(False)   # Turn Off Warnings About GPIO Pins
 
-spi = spidev())  # Uses /dev/spidev0.0 [SPI Pins 19, 21, 23, 24]
+spi = spidev()  # Uses /dev/spidev0.0 [SPI Pins 19, 21, 23, 24]
 spi.max_speed_hz = 10000000 # Set Max SPI Speed [Max Limit: 32MHz]
 spi.mode(1)
 
