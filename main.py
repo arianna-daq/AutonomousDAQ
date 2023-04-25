@@ -383,7 +383,7 @@ def SaveEvent(ETms):
     didSave = False
 
     ClearEvent(True, True)
-    b = ReadWaveformsSST()
+    b = ReadWaveformsSST(spi, ReadingOut)
     BytesToHex(b)
 
 
