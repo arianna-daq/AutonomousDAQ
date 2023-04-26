@@ -384,7 +384,7 @@ def SaveEvent(ETms):
 
     ClearEvent(True, True)
     b = ReadWaveformsSST(spi, ReadOutSelect)
-    BytesToHex(b)
+    print(BytesToHex(b))
 
 
     # Reset Chips
