@@ -378,7 +378,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gFirstEvt   = False
 
 def SaveEvent(ETms):
-    global WD, spi, gReadingOut
+    global WD, spi, ReadingOut
 
     didSave = False
 
