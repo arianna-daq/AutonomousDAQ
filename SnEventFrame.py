@@ -38,7 +38,7 @@ def ReadWaveformsSST(spi, ReadingOut):
     spi.open(0,0)
     spi.max_speed_hz = 10000000 # Set Max SPI Speed [Max Limit: 32MHz]
     spi.mode = 1
-    Bytes = spi.readbytes(3)
+    Bytes = spi.readbytes(256)
     spi.close()
 
     return Bytes
