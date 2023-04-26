@@ -378,12 +378,12 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gFirstEvt   = False
 
 def SaveEvent(ETms):
-    global WD, spi, ReadingOut
+    global WD, spi, ReadOutSelect
 
     didSave = False
 
     ClearEvent(True, True)
-    b = ReadWaveformsSST(spi, ReadingOut)
+    b = ReadWaveformsSST(spi, ReadOutSelect)
     BytesToHex(b)
 
 
