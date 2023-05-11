@@ -12,6 +12,7 @@ from SnTempFrame import *
 from Watchdog import Watchdog
 from threading import Timer
 from SnEventFrame import SnEventFrame, ReadWaveformsSST, ClearEvent, BytesToHex
+from SnTickerTimer import SnTickerTimer
 
 # Get Start Up Time
 gPowerOnTime = time()
@@ -106,7 +107,7 @@ gHrtbtNum         = 0   # Number of Heartbeat Triggers
 #####################
 def procForceTrigger():
     global gReadingOut, gCommWinOpen, gForcedTrig, gNumFrcTrig
-    global CardPower, DataReady, ForcedTrig
+    global CardPower, DataReady, ForcedTrig, gForceTicker
 
     if not gReadingOut and not gCommWinOpen:
         if DEBUG:
@@ -120,9 +121,11 @@ def procForceTrigger():
         GPIO.output(ForcedTrig, True)
         GPIO.output(ForcedTrig, False)
 
+        gForceTicker.RESTART()
+
 def procHeartbeat():
     global gReadingOut, gCommWinOpen, HeartbeatTrig
-    global gLastHrtbt, gHrtbtFired, gHrtbtNum
+    global gLastHrtbt, gHrtbtFired, gHrtbtNum, gHeartbeatTicker
 
     if not gReadingOut and not gCommWinOpen:
         if DEBUG:
@@ -135,16 +138,21 @@ def procHeartbeat():
         gHrtbtFired = True
         gHrtbtNum += 1
 
+        gHeartbeatTicker.RESTART()
+
 def procTempCheck():
-    global gCheckTemp
+    global gCheckTemp, gTempCheckTicker
 
     gCheckTemp = True
 
-def SetPower(isCommWin): # MISSING WD
-    global CardPower, AmpPower, IridPower
+    gTempCheckTicker.RESTART()
+
+def SetPower(isCommWin):
+    global CardPower, AmpPower, IridPower, WD
 
     if DEBUG:
         print("Set Power Executed: isCommWin? %s" % (isCommWin))
+        print("Watchdog Reset? : %s" % (WD.didWatchdogReset()))
         print("Power Config Byte: %s" % (SnConfigFrame().PowerMode()))
         print("IsPoweredFor kCardDatTak: %s" % (bool(SnConfigFrame().IsPoweredFor(kCardDatTak))))
         print("IsPoweredFor kAmpsDatTak: %s" % (bool(SnConfigFrame().IsPoweredFor(kAmpsDatTak))))
@@ -173,6 +181,8 @@ def SetPower(isCommWin): # MISSING WD
 
     if cardToOn:
         GPIO.output(CardPower, True)
+        # ADD A WAIT TIMER HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         if DEBUG:
             print("Powering Up Cards")
 
@@ -283,16 +293,39 @@ def SetSstDACs(bus):
             if DEBUG:
                 print("Channel %d: Transmitted? %s " % (ch, dok))
 
-def LoadSetDEFCONF():
+def ResetAllTickers():
+    global gForceTicker, gHeartbeatTicker, gTempCheckTicker, gCommWinTicker
+
+    gForceTicker = SnTickerTimer(SnConfigFrame().GetForcedPeriod(), procForceTrigger)
+    gHeartbeatTicker = SnTickerTimer(SnConfigFrame().GetHeartbeatPeriod(), procHeartbeat)
+    gTempCheckTicker = SnTickerTimer(SnConfigFrame().GetTemperaturePeriod(), procTempCheck)
+    #gCommWinTicker   = None     # Communication Window Ticker
+
+def StopAllTickers():
+    global gForceTicker, gHeartbeatTicker, gTempCheckTicker, gCommWinTicker
+
+    gForceTicker.STOP()
+    gHeartbeatTicker.STOP()
+    gTempCheckTicker.STOP()
+    # gCommWinTicker
+
+def SetConfigAndMakeOutputFile():
     global ThermTrigEnable, ForcedTrig, MajorHighBit, MajorLowBit
-    global DiffSelect, AndOrSelect
+    global DiffSelect, AndOrSelect, HeartbeatTrig, WD, bus
+
+    if DEBUG:
+        print("SetConfigAndMakeOutputFile Executed.")
+        print("Restart Watchdog; WD Period: %s" % (SnConfigFrame().GetWatchdogPeriod()))
+
+    WD.kick(SnConfigFrame().GetWatchdogPeriod())
 
     # Block Triggers during Configuration
     GPIO.output(ThermTrigEnable, False) # Thermal Trigger
     GPIO.output(ForcedTrig, False)      # Force Trigger
-    # HB set 0
+    GPIO.output(HeartbeatTrig, False)   # Heartbeat Trigger
 
-    LoadDEFCONF()
+    # Turn Off Comms, Turn On Cards/ Amps (Based on Config)
+    SetPower(False)
 
     # COMMS CHECKS
 
@@ -328,8 +361,10 @@ def LoadSetDEFCONF():
 
 
     # MAKE OUTPUT FILE
-    # RESET TICKERS
-    # WD KICK/ Wait
+
+    ResetAllTickers()
+
+    WD.kick()
 
     if DEBUG:
         print("Configuration Complete.")
@@ -418,20 +453,16 @@ if __name__=="__main__":
               (bool(GPIO.input(CardPower)), bool(GPIO.input(AmpPower)), bool(GPIO.input(IridPower))))
 
     # Load & Set Board Configurations
-    LoadSetDEFCONF()
+    LoadDEFCONF()
 
     if DEBUG:
         print("Configuration File Loaded.")
 
+    SetConfigAndMakeOutputFile()
+
     # Comms Settings, MAC Addr, Timing Settings, Tickers and Clocks
 
-    if DEBUG:
-        print("Restart Watchdog at [%s] with Period [%s]" % (time(), SnConfigFrame().GetWatchdogPeriod()))
     
-    WD.kick(SnConfigFrame().GetWatchdogPeriod())
-
-    # Turn Off Comms, Turn On Cards/ Amps (Based on Config)
-    SetPower(False)
 
     if DEBUG:
         print("Run Mode")

@@ -144,13 +144,20 @@ class SnConfigFrame:
         ML = format(SnConfigFrame().ConfigFrame['fNumCardsMajLog'], '02b')
         return bool(ML[1]), bool(ML[0])
     
+    def GetHeartbeatPeriod(self):
+        return SnConfigFrame().ConfigFrame['fHeartbeatPeriod']
+    
+    def GetTemperaturePeriod(self):
+        return SnConfigFrame().ConfigFrame['fTempPeriod']
+    
+    def GetForcedPeriod(self):
+        return SnConfigFrame().ConfigFrame['fForcedPeriod']
+    
     def GetWatchdogPeriod(self):
         return SnConfigFrame().ConfigFrame['WatchdogPeriod']
     
     def GetThrottlePeriodms(self):
         return SnConfigFrame().ConfigFrame['fThrottlePeriod']
-
-
 
 def checkDEFCONF(infn):
     if not exists(infn):
