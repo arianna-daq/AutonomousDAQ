@@ -81,7 +81,7 @@ DACS= 7 : 200,40000
 # number of cards in the majority logic
 NumCardsMajLog=1
 # if False, will disable all thermal triggers (!)
-ThermalTrigOn=True
+ThermalTrigOn=False
 #
 # forced trigger period (s). 1800 max. 0 = off
 # NOTE: this is now a floating point number, in seconds
