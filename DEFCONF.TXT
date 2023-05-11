@@ -88,7 +88,7 @@ ThermalTrigOn=True
 # (with MBED revision 18 and above)
 # the period can be specified from 0.05s to 1800s
 # of course, triggering faster than the throttle is useless
-ForcedPeriod=1800
+ForcedPeriod=0
 #
 # heartbeat period (s). 1800 max. 0 = off. integer values.
 # NOTE: May want "CommWinSendData=StatSendHtbt" enabled
@@ -114,7 +114,7 @@ VoltCheckPeriod=127
 #               temperature readings while the 3.3V supply is off (low power)
 # format is: TempCheckPeriodAndPower=[period],[CardPower / MbedPower]
 # (only useful for SST boards)
-TempCheckPeriod=1
+TempCheckPeriod=0
 #
 # com win period, dur in seconds. integer values.
 # the comm win period safety net range is [120, 259200]

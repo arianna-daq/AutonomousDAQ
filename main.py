@@ -52,13 +52,13 @@ GPIO.setup(DataReady, GPIO.IN)  # Data Ready Flag
 GPIO.setup(ResetChips, GPIO.OUT, initial=False)       # Reset Chips
 GPIO.setup(ThermTrigEnable, GPIO.OUT, initial=False)  # Enable Thermal Triggers
 GPIO.setup(ForcedTrig, GPIO.OUT, initial=False)       # Execute Forced Trigger
-GPIO.setup(DiffSelect, GPIO.OUT, initial=True)        # FPGA Differential Select
+GPIO.setup(DiffSelect, GPIO.OUT, initial=False)        # FPGA Differential Select
 GPIO.setup(AndOrSelect, GPIO.OUT, initial=True)       # Dual Threshold Select
 GPIO.setup(HeartbeatTrig, GPIO.OUT, initial=False)    # Heartbeat Trigger
 GPIO.setup(MajorLowBit, GPIO.OUT, initial=False)      # Majority Logic Low Bit
 GPIO.setup(MajorHighBit, GPIO.OUT, initial=False)     # Majority Logic High Bit
 GPIO.setup(ReadOutSelect, GPIO.OUT, initial=False)    # Reading Out Data Select
-GPIO.setup(CardPower, GPIO.OUT, initial=False)        # Card/ Data Taking Power
+GPIO.setup(CardPower, GPIO.OUT, initial=True)        # Card/ Data Taking Power
 GPIO.setup(AmpPower, GPIO.OUT, initial=False)         # Amp Power
 GPIO.setup(IridPower, GPIO.OUT, initial=False)        # Iridium Power
 
