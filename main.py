@@ -105,6 +105,19 @@ gHrtbtNum         = 0   # Number of Heartbeat Triggers
 
 # Essential Functions
 #####################
+def ReadAllPins():
+    global ForcedTrig, CardPower, DataReady, ResetChips, ThermTrigEnable, DiffSelect
+
+    print("Force Trig Pin: %s, Cards Powered?: %s, Data Ready?: %s" % 
+                  (GPIO.input(ForcedTrig), GPIO.input(CardPower), GPIO.input(DataReady))) 
+    print("CardsReset?: %s, ThernalEnable?: %s, Diff Select: %s" % 
+                  (GPIO.input(ResetChips), GPIO.input(ThermTrigEnable), GPIO.input(DiffSelect))) 
+    print("AndOrSelect: %s, Hrtbt  trig?: %s, Readout Select: %s" % 
+                  (GPIO.input(AndOrSelect), GPIO.input(HeartbeatTrig), GPIO.input(ReadOutSelect))) 
+    print("Maj Low: %s, Maj High: %s" % 
+                  (GPIO.input(MajorLowBit), GPIO.input(MajorHighBit))) 
+
+
 def procForceTrigger():
     global gReadingOut, gCommWinOpen, gForcedTrig, gNumFrcTrig
     global CardPower, DataReady, ForcedTrig, gForceTicker
@@ -362,12 +375,14 @@ def SetConfigAndMakeOutputFile():
 
     # MAKE OUTPUT FILE
 
-    ResetAllTickers()
+    #ResetAllTickers()
 
     WD.kick()
 
     if DEBUG:
         print("Configuration Complete.")
+
+    ReadAllPins()
 
 def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
     """Secondary Loop under Main Loop. Waits for Trigger [P7] or Flags to
@@ -375,6 +390,8 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
     [gOpenCommWin] and Check Temperature [gCheckTemp]."""
 
     global gFirstEvt, gReadingOut, gOpenCommWin, DataReady
+
+    ReadAllPins()
 
     if DEBUG:
         print("WaitTrigAndSendClock Executed")
@@ -396,6 +413,7 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
 
         # Wait for FPGA Data Ready Flag
         while(GPIO.input(DataReady) == False):
+            ReadAllPins()
 
             # Perform Priority Functions While Waiting
             if gOpenCommWin or gCheckTemp:
@@ -446,6 +464,7 @@ def SaveEvent(ETms):
 ##########################################################################
 
 if __name__=="__main__":
+    ReadAllPins()
     if DEBUG:
         print("System Starting...")
         #print("Local Time: %s" % (time.localtime()))
@@ -503,7 +522,9 @@ if __name__=="__main__":
 
                 # Reset Chips
                 GPIO.output(ResetChips, True)
+                ReadAllPins()
                 GPIO.output(ResetChips, False)
+                ReadAllPins()
 
 
             else:
