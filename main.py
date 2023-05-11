@@ -501,13 +501,13 @@ if __name__=="__main__":
     # Time Between events, Zerod.
     ETms = 0
 
+    if DEBUG:
+            print("##############################################################")
+            print("Starting Main Loop...")
+
     while(True):
         
         WD.kick()   # Don't Reset!
-
-        if DEBUG:
-            print("##############################################################")
-            print("Starting Main Loop...")
 
         if DEBUG:
             print("gFirstEvt = %s" % (gFirstEvt))
