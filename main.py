@@ -412,8 +412,8 @@ def WaitTrigAndSendClock(): # MISSING SPI SETTINGS
         gReadingOut = False
 
         # Wait for FPGA Data Ready Flag
-        while(GPIO.input(DataReady) == 0):
-            ReadAllPins()
+        while(True):
+            print(GPIO.input(DataReady))
 
             # Perform Priority Functions While Waiting
             if gOpenCommWin or gCheckTemp:
