@@ -19,7 +19,7 @@ gPowerOnTime = time()
 # Start Watchdog Immediately [Use WDFAILSAFE During Configuration]
 WD = Watchdog(WDFAILSAFE)
 
-# MAC ADDRESS GOES HERE
+# MAC ADDRESS GOES HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # Initialize and Assign IO pins
 ###############################
@@ -77,7 +77,7 @@ GPIO.setup(IridPower, GPIO.OUT, initial=False)        # Iridium Power
 
 # Initialize Global Variables
 ###########################
-gForceticker     = None     # Force Trigger Ticker
+gForceTicker     = None     # Force Trigger Ticker
 gHeartbeatTicker = None     # Heartbeat Trigger Ticker
 gTempCheckTicker = None     # Check Temperature Ticker
 gCommWinTicker   = None     # Communication Window Ticker
